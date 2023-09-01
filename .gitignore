@@ -282,3 +282,11 @@ maag_app/media/
 /.envs/.local/.django
 /.envs/.local/.postgres
 /maag_app/init_static/
+/.idea/maag_app.iml
+/.idea/dataSources.xml
+/.idea/.gitignore
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/vcs.xml
