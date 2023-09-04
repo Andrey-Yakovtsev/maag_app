@@ -12,16 +12,11 @@ https://docs.google.com/document/d/1aRzXn198ORR03Wp14iwpv0IHC-hmTsUS2xwT092hkgY/
 2. Orders
 3. Sales
 4. 
-### Связи MCC:
-Subfamily - FK
-Family - FK
-Buyer - FK
-Section - FK
-Season - FK
 
-PO Season - Скорее всего связб через заказ.
+
+PO Season - Скорее всего связm через заказ.
 
 TODO-шки:
 Доступы без авторизации -проверить, что их нет.
-
+выпилить из формы фильтрации MCC & Description
 Разобраться с form.as_table - повесить на этот блок нормальные стили

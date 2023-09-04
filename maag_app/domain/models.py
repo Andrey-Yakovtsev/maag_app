@@ -39,7 +39,7 @@ def set_deleted_name(model):
 
 class Product(models.Model):
     mcc = models.CharField(blank=False, unique=True)
-    # description = models.CharField(max_length=512, default='')
+    description = models.CharField(max_length=512, default='')
     subfamily = models.ForeignKey(Subfamily, related_name='products', on_delete=models.CASCADE)
     family = models.ForeignKey(Family, related_name='products', on_delete=models.CASCADE)
     group = models.ForeignKey(Group, related_name='products', on_delete=models.CASCADE)
