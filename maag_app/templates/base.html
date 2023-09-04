@@ -268,7 +268,7 @@
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{% url 'home' %}">Home 1</a></li>
-                            <!-- <li><a href="./index-2.html">Home 2</a></li> -->
+                            <li><a href="{% url 'domain:mcc_report' %}">MCC Report</a></li>
                         </ul>
                     </li>
                     <li class="mega-menu mega-menu-sm">
@@ -987,7 +987,7 @@
     <!--**********************************
         Main wrapper end
     ***********************************-->
-    {% block scripts %}
+    {% block basescripts %}
     <!--**********************************
         Scripts
     ***********************************-->
@@ -996,11 +996,15 @@
     <script src="{% static 'js/settings.js' %}"></script>
     <script src="{% static 'js/gleek.js' %}"></script>
     <script src="{% static 'js/styleSwitcher.js' %}"></script>
-
-    <!-- Chartjs -->
-    <script src="{% static './plugins/chart.js/Chart.bundle.min.js' %}"></script>
     <!-- Circle progress -->
     <script src="{% static './plugins/circle-progress/circle-progress.min.js' %}"></script>
+
+      <script src="{% static './js/dashboard/dashboard-1.js' %}"></script>
+    {% endblock  %}
+
+    {% block extrascripts %}
+    <!-- Chartjs -->
+    <script src="{% static './plugins/chart.js/Chart.bundle.min.js' %}"></script>
     <!-- Datamap -->
     <script src="{% static './plugins/d3v3/index.js' %}"></script>
     <script src="{% static './plugins/topojson/topojson.min.js' %}"></script>
@@ -1015,7 +1019,6 @@
     <script src="{% static './plugins/chartist/js/chartist.min.js' %}"></script>
     <script src="{% static './plugins/chartist-plugin-tooltips/js/chartist-plugin-tooltip.min.js' %}"></script>
 
-    <script src="{% static './js/dashboard/dashboard-1.js' %}"></script>
     {% endblock %}
 </body>
 

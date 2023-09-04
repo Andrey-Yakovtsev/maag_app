@@ -6,7 +6,6 @@ from pathlib import Path
 import environ
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
-print('BASE_DIR====>>>>>>', BASE_DIR)
 # maag_app/
 APPS_DIR = BASE_DIR / "maag_app"
 env = environ.Env()
@@ -78,11 +77,16 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "django_celery_beat",
+    "django_filters",
 ]
 
 LOCAL_APPS = [
     "maag_app.users",
     # Your stuff: custom apps go here
+    "maag_app.domain",
+    "maag_app.sales",
+    "maag_app.stocks",
+    "maag_app.orders",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
