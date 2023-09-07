@@ -60,8 +60,10 @@ class Product(models.Model):
         from maag_app.stocks.models import Stock
 
         return (
-            Stock.objects.select_related("mcc")
-            .filter(mcc=self, date=str(datetime.date.today()))
+            Stock.objects.filter(mcc=self)
+            # .select_related("mcc")
+            .select_related()
+            .order_by("-date")
             .first()
             .country_qty
         )
@@ -71,8 +73,9 @@ class Product(models.Model):
         from maag_app.stocks.models import Stock
 
         return (
-            Stock.objects.select_related("mcc")
-            .filter(mcc=self, date=str(datetime.date.today()))
+            Stock.objects.filter(mcc=self)
+            .select_related("mcc")
+            .order_by("-date")
             .first()
             .stores_qty
         )
@@ -82,12 +85,17 @@ class Product(models.Model):
         from maag_app.sales.models import Sales
 
         week_ago = str(datetime.date.today() - datetime.timedelta(weeks=1))
-        last_week_sales = (
-            Sales.objects.select_related("mcc")
-            .filter(mcc=self, date__range=[week_ago, str(datetime.date.today())])
-            .values_list("quantity", flat=True)
-        )
-        return round(self.country_stock / sum(last_week_sales))
+        try:
+            last_week_sales = (
+                Sales.objects.filter(
+                    mcc=self, date__range=[week_ago, str(datetime.date.today())]
+                )
+                .select_related("mcc")
+                .values_list("quantity", flat=True)
+            )
+            return round(self.country_stock / sum(last_week_sales))
+        except AttributeError:
+            return 0
 
     @property
     def sellthrough(self) -> float:
@@ -95,13 +103,13 @@ class Product(models.Model):
         from maag_app.sales.models import Sales
 
         ordered = (
-            OrderItem.objects.select_related("mcc")
-            .filter(mcc=self)
+            OrderItem.objects.filter(mcc=self)
+            .select_related("mcc")
             .values_list("purchased_qty", flat=True)
         )
         total_sales = (
-            Sales.objects.select_related("mcc")
-            .filter(mcc=self)
+            Sales.objects.filter(mcc=self)
+            .select_related("mcc")
             .values_list("quantity", flat=True)
         )
         return round(sum(ordered) / sum(total_sales), 2)
@@ -111,15 +119,22 @@ class Product(models.Model):
         from maag_app.orders.models import OrderItem
 
         pending = (
-            OrderItem.objects.select_related("mcc")
-            .filter(mcc=self)
+            OrderItem.objects.filter(mcc=self)
+            .select_related("mcc")
             .values_list("final_qty", flat=True)
         )
         return sum(pending)
 
     @property
-    def continuity(self) -> str:
-        return "Yes" if self.carry_over else "No"
+    def purchased(self) -> int:
+        from maag_app.orders.models import OrderItem
+
+        purchased = (
+            OrderItem.objects.filter(mcc=self)
+            .select_related("mcc", "order")
+            .values_list("purchased_qty", flat=True)
+        )
+        return sum(purchased)
 
     def __str__(self):
         return self.mcc

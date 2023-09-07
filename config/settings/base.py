@@ -319,5 +319,7 @@ SOCIALACCOUNT_FORMS = {"signup": "maag_app.users.forms.UserSocialSignupForm"}
 
 # Your stuff...
 # ------------------------------------------------------------------------------
-DATE_FORMAT = "%d/%m/%Y"  # '25/10/2006'
-DATE_INPUT_FORMATS = ["%d/%m/%Y"]
+# DATE_FORMAT = "%d/%m/%Y"  # '25/10/2006'
+DATE_FORMAT = "d/m/Y"  # '25/10/2006'
+USE_L10N = False
+# DATE_INPUT_FORMATS = ["%d/%m/%Y"]
