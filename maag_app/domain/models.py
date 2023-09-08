@@ -54,6 +54,9 @@ class Product(models.Model):
         Season, related_name="products", on_delete=models.CASCADE
     )
     carry_over = models.BooleanField(default=False)
+    mirror_mcc = models.OneToOneField(
+        "Product", null=True, blank=True, on_delete=models.DO_NOTHING
+    )
 
     @property
     def country_stock(self) -> int:
