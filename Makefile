@@ -9,3 +9,9 @@ down:
 
 kill:
 	docker compose -f local.yml down -v
+
+migrate:
+	docker compose -f local.yml run --rm django python manage.py migrate
+
+superuser:
+	docker compose -f local.yml run --rm django python manage.py createsuperuser
