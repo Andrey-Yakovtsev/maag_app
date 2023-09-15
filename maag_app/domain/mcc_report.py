@@ -3,10 +3,19 @@
 """
 import datetime
 
+import django_tables2 as tables
+
 from maag_app.domain.models import Product
 from maag_app.sales.models import Sales
 
 four_weeks_bckwd = datetime.date.today() - datetime.timedelta(weeks=4)
+
+
+class MccTable(tables.Table):
+    class Meta:
+        model = Product
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("mcc",)
 
 
 class MccReport:
@@ -58,5 +67,5 @@ class MccReport:
             # Если миррор не присвоен, то берем от текущего МСС все МСС, что
             # выфильтровываются по 5 фильтрам и выводим средние продажи
             # по неделям для них - должен получиться list[int]
-            pass
+            return []
             # TODO доделаю позже, как разберусь с основной формой

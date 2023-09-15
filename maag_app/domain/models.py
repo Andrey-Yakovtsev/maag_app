@@ -97,7 +97,7 @@ class Product(models.Model):
                 .values_list("quantity", flat=True)
             )
             return round(self.country_stock / sum(last_week_sales))
-        except AttributeError:
+        except (AttributeError, ZeroDivisionError):
             return 0
 
     @property
