@@ -17,7 +17,7 @@ buildupl:
 	docker-compose -f local.yml up --build
 
 upl:
-	docker-compose -f local.yml up -d
+	docker-compose -f local.yml up
 
 downl:
 	docker-compose -f local.yml down
