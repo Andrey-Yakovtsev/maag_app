@@ -1,11 +1,12 @@
 from django.db import models
 
-from maag_app.domain.models import Product
+from maag_app.domain.models import Product, ReportEntity
 
 
-class Stock(models.Model):
-    date = models.DateField(blank=False)
-    mcc = models.ForeignKey(Product, related_name="stocks", on_delete=models.CASCADE)
+class Stock(ReportEntity):
+    mcc = models.ForeignKey(
+        Product, related_name="stocks", on_delete=models.CASCADE
+    )
     stores_qty = models.IntegerField(default=0)
     country_qty = models.IntegerField(default=0)
 

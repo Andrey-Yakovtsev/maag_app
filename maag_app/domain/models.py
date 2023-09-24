@@ -3,6 +3,26 @@ import datetime
 from django.db import models
 
 
+class ReportEntity(models.Model):
+    date: datetime.date = models.DateField(blank=False)
+    week: int = models.IntegerField(max_length=3, null=True, blank=True)
+    year: int = models.IntegerField(max_length=4, null=True, blank=True)
+
+    class Meta:
+        abstract = True
+
+    def _add_week_number(self):
+        self.week = self.date.isocalendar()[1]
+
+    def _add_year(self):
+        self.year = self.date.year
+
+    def save(self):
+        self._add_week_number()
+        self._add_year()
+        super().save()
+
+
 class ProductEnumFilter(models.Model):
     name = models.CharField(blank=False, unique=True)
 
@@ -31,10 +51,6 @@ class Section(ProductEnumFilter):
 
 class Season(ProductEnumFilter):
     ...
-
-
-# def set_deleted_name(model):
-#     return model.objects.get_or_create(name="deleted")[0]
 
 
 class Product(models.Model):

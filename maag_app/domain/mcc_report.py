@@ -27,7 +27,7 @@ class MccReport:
     def __init__(self, mcc: str, date: datetime.date = datetime.date.today()):
         self.mcc = self._get_mcc(mcc)
         self.date = date
-        self.report_range = self._set_report_period()
+        self.report_range = self._set_report_period_in_weeks()
 
     @staticmethod
     def _get_mcc(mcc) -> Product:
@@ -36,22 +36,29 @@ class MccReport:
         except Product.DoesNotExist as err:
             logger.error(f'No product with given MCC: {mcc}. Error: {err}')
 
-    def _set_report_period(self) -> list[datetime.date, datetime.date]:
-        """Устанавливает период для отчета на 12 недель"""
+    def _set_report_period_in_days(self) -> list[datetime.date, datetime.date]:
+        """Расчитывает начало и конец отчетного периода в днях."""
         start_date = self.date - datetime.timedelta(weeks=4)
         end_date = self.date + datetime.timedelta(weeks=8)
         return [start_date, end_date]
 
+    def _set_report_period_in_weeks(self) -> list[int, int]:
+        """Получает начало и конец отчетного периода в неделях для фильтра кверисета"""
+        weeks = list(self._set_weeks_numbers())
+        return [weeks[0], weeks[-1]]
+
     def _set_weeks_numbers(self) -> set[int]:
+        """Расчитывает начало и конец отчетного периода в неделях."""
         week_numbers = set()
         delta = datetime.timedelta(days=1)
-        start_date, end_date = self.report_range
+        start_date, end_date = self._set_report_period_in_days()
         while start_date <= end_date:
             week_numbers.add(start_date.isocalendar()[1])
             start_date += delta
         return week_numbers
 
     def _get_actual_sales(self) -> list[int]:
+            # FIXME добавить выборку по неделям и додумать, как по годам будет...
         return (
             Sales.objects.filter(
                 mcc=self.mcc,
