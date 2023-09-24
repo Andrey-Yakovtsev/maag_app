@@ -6,18 +6,18 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# import django_tables2 as tables
+import django_tables2 as tables
 
 from maag_app.domain.models import Product
 from maag_app.sales.models import Sales
 from maag_app.stocks.models import Stock
 
 
-# class MccTable(tables.Table):
-#     class Meta:
-#         model = Product
-#         template_name = "django_tables2/bootstrap.html"
-#         fields = ("mcc",)
+class MccTable(tables.Table):
+    class Meta:
+        model = Product
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("mcc",)
 
 
 class MccReport:
@@ -42,10 +42,9 @@ class MccReport:
         end_date = self.date + datetime.timedelta(weeks=8)
         return [start_date, end_date]
 
-    def _set_report_period_in_weeks(self) -> list[int, int]:
+    def _set_report_period_in_weeks(self) -> list[int]:
         """Получает начало и конец отчетного периода в неделях для фильтра кверисета"""
-        weeks = list(self._set_weeks_numbers())
-        return [weeks[0], weeks[-1]]
+        return list(self._set_weeks_numbers())
 
     def _set_weeks_numbers(self) -> set[int]:
         """Расчитывает начало и конец отчетного периода в неделях."""
@@ -62,7 +61,7 @@ class MccReport:
         return (
             Sales.objects.filter(
                 mcc=self.mcc,
-                date__range=self.report_range
+                week__in=self.report_range
             )
             .select_related("mcc")
             .values_list("quantity", flat=True)
@@ -73,7 +72,7 @@ class MccReport:
             return (
                 Sales.objects.filter(
                     mcc=self.mcc.mirror_mcc,
-                    date__range=self.report_range
+                    week__in=self.report_range
                 )
                 .select_related("mcc")
                 .values_list("quantity", flat=True)
@@ -89,10 +88,10 @@ class MccReport:
         return (
             Stock.objects.filter(
                 mcc=self.mcc,
-                date__range=self.report_range
+                week__in=self.report_range
             )
             .select_related("mcc")
-            .values_list("stores_qty", "country_qty", flat=True)
+            .values_list("stores_qty", flat=True)
         )
 
     def _get_aggergated_data(self):
@@ -115,6 +114,6 @@ class MccReport:
             "stocks": self._get_stocks()
         }
 
-report = MccReport("000/0012/1231")
-
-print(report.generate())
+# report = MccReport("000/0012/1231")
+# TODO Проверить отчет  в шелле
+# print(report.generate())

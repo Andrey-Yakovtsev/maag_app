@@ -29,7 +29,7 @@ superuserl:
 	sudo docker-compose -f local.yml run --rm django python manage.py createsuperuser
 
 shelll:
-	sudo docker-compose -f local.yml run --rm django python manage.py shell
+	sudo docker-compose -f local.yml run --rm django python manage.py shell_plus
 
 migrations:
 	sudo docker-compose -f local.yml run --rm django python manage.py makemigrations
