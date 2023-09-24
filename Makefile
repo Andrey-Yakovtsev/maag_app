@@ -14,16 +14,25 @@ superuser:
 	docker compose -f local.yml run --rm django python manage.py createsuperuser
 
 buildupl:
-	docker-compose -f local.yml up --build
+	sudo docker-compose -f local.yml up --build
 
 upl:
-	docker-compose -f local.yml up
+	sudo docker-compose -f local.yml up
 
 downl:
-	docker-compose -f local.yml down
+	sudo docker-compose -f local.yml down
 
 killl:
-	docker-compose -f local.yml down -v
+	sudo docker-compose -f local.yml down -v
 
 superuserl:
-	docker-compose -f local.yml run --rm django python manage.py createsuperuser
+	sudo docker-compose -f local.yml run --rm django python manage.py createsuperuser
+
+shelll:
+	sudo docker-compose -f local.yml run --rm django python manage.py shell
+
+migrations:
+	sudo docker-compose -f local.yml run --rm django python manage.py makemigrations
+
+migrate:
+	sudo docker-compose -f local.yml run --rm django python manage.py migrate
