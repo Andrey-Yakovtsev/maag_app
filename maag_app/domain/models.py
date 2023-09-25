@@ -5,8 +5,8 @@ from django.db import models
 
 class ReportEntity(models.Model):
     date: datetime.date = models.DateField(blank=False)
-    week: int = models.IntegerField(max_length=3, null=True, blank=True)
-    year: int = models.IntegerField(max_length=4, null=True, blank=True)
+    week: int = models.IntegerField(null=True, blank=True)
+    year: int = models.IntegerField(null=True, blank=True)
 
     class Meta:
         abstract = True
