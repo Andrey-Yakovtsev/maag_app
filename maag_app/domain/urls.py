@@ -7,7 +7,7 @@ from maag_app.domain.utils import (
     get_latest_sales_report_date,
     get_latest_stock_report_date,
 )
-from maag_app.domain.views import MccListView
+from maag_app.domain.views import ReportView, testing
 
 app_name = "domain"
 urlpatterns = [
@@ -26,5 +26,5 @@ urlpatterns = [
         ),
         name="mcc_report",
     ),
-    path("mcc-report-2/", MccListView.as_view()),
+    path("mcc-report-2/", testing, name="mcc_report_2",),
 ]

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+<body>
+  <!--**********************************
+        Main wrapper start
+    ***********************************-->
+  <div id="main-wrapper">
+    {% block mainbody %}
+      <!--**********************************
+            Content body start
+        ***********************************-->
+      <div class="content-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Bullshit Report</h4>
+
+
+                  <h2>context </h2>
+                  <hr>
+                  <div>{{ new_stuff }}</div>
+                  <div>{{ new_stuff.bull }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+      <!-- #/ container -->
+    </div>
+    <!--**********************************
+            Content body end
+        ***********************************-->
+  </div>
+{% endblock mainbody %}
+</div>
+<!--**********************************
+        Main wrapper end
+***********************************-->
+<!--**********************************
+        Scripts
+    ***********************************-->
+{% block extrascripts %}
+  <script src="{% static './plugins/tables/js/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static './plugins/tables/js/datatable/dataTables.bootstrap4.min.js' %}"></script>
+  <script src="{% static './plugins/tables/js/datatable-init/datatable-basic.min.js' %}"></script>
+{% endblock extrascripts %}
+</body>

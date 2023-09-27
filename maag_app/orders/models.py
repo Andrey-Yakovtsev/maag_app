@@ -25,3 +25,6 @@ class OrderItem(models.Model):
     received_qty = models.IntegerField(default=0)
     final_qty = models.IntegerField(default=0)
     order = models.ForeignKey(Order, related_name="items", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Mcc - {self.mcc.mcc}. Order {self.order.number}"
