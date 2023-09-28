@@ -1,35 +1,53 @@
 from django.http import HttpResponse
 from django.template import loader
-from django.views.generic import TemplateView
 from django_filters.views import FilterView
-from django_tables2.views import SingleTableMixin
 
-from .filters import MccFilter
-from .mcc_report import MccTable
-from .models import Product
+from maag_app.domain.filters import MccFilter
+from maag_app.domain.models import Product
+from maag_app.domain.utils import get_latest_sales_report_date, \
+    get_latest_stock_report_date, get_latest_orders_report_date
 
 
-class MccListView(SingleTableMixin, FilterView):
-    table_class = MccTable
+def mcc_report_view(request):
+    context = {}
+    mcc_filter = MccFilter(request.GET, queryset=Product.objects.select_related().all())
+    template = loader.get_template('domain/product_filter.html')
+    context["filter"] = mcc_filter
+    context["dates"] = {
+      "sales": get_latest_sales_report_date(),
+      "stock": get_latest_stock_report_date(),
+      "orders": get_latest_orders_report_date(),
+    }
+    # TODO Понять как к странице с фильтром на полученный
+    #  кверисет прикручивать контекст...
+    return HttpResponse(template.render(context, request))
+
+
+class MccReportView(FilterView):
     model = Product
-    template_name = "product_list.html"
     filterset_class = MccFilter
+    # template_name = "report_simple.html"
 
+    def get(self, request, *args, **kwargs):
+        filterset_class = self.get_filterset_class()
+        self.filterset = self.get_filterset(filterset_class)
 
-class ReportView(TemplateView):
-    template_name = "report_simple.html"
+        if (
+            not self.filterset.is_bound
+            or self.filterset.is_valid()
+            or not self.get_strict()
+        ):
+            self.object_list = self.filterset.qs
+        else:
+            self.object_list = self.filterset.queryset.none()
 
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context["new_stuff"] = {"bull": "shit"}
-
-        print("context.__dict__====>>>", context.items())
-
-
-def testing(request):
-  template = loader.get_template('report_simple.html')
-  context = {"new_stuff": {"bull": "shit"}}
-  # TODO Понять как к странице с фильтром на полученный
-  #  кверисет прикручивать контекст...
-  return HttpResponse(template.render(context, request))
+        context = self.get_context_data(
+            filter=self.filterset, object_list=self.object_list
+        )
+        context["dates"] = {
+                "sales": get_latest_sales_report_date(),
+                "stock": get_latest_stock_report_date(),
+                "orders": get_latest_orders_report_date(),
+            }
+        # TODO - Продолжить с контекстом
+        return self.render_to_response(context)
