@@ -3,21 +3,18 @@
 """
 import datetime
 import logging
+from array import array
+
+from django.db.models import Sum, Model
+
+from maag_app.orders.models import OrderItem
 
 logger = logging.getLogger(__name__)
 
-import django_tables2 as tables
 
 from maag_app.domain.models import Product
 from maag_app.sales.models import Sales
 from maag_app.stocks.models import Stock
-
-
-class MccTable(tables.Table):
-    class Meta:
-        model = Product
-        template_name = "django_tables2/bootstrap.html"
-        fields = ("mcc",)
 
 
 class MccReport:
@@ -25,9 +22,10 @@ class MccReport:
     Построение отчета по каждому отдельному МСС на указанную (или дефолтную дату)
     """
     def __init__(self, mcc: str, date: datetime.date = datetime.date.today()):
-        self.mcc = self._get_mcc(mcc)
-        self.date = date
-        self.report_range = self._set_report_period_in_weeks()
+        self.mcc: str = self._get_mcc(mcc)
+        self.date: datetime.date = date
+        self.report_range: list[int] = self._set_report_period_in_weeks()
+        self.report_range_weeks_count: int = 13
 
     @staticmethod
     def _get_mcc(mcc) -> Product:
@@ -61,27 +59,57 @@ class MccReport:
         logger.debug(f'_set_weeks_numbers ==> {week_numbers}')
         return week_numbers
 
-    def _get_actual_sales(self) -> list[int]:
-            # FIXME добавить выборку по неделям и додумать, как по годам будет...
-        sales = Sales.objects.filter(
-                mcc=self.mcc,
-                week__in=self.report_range
-            ).select_related("mcc").values_list("quantity", flat=True)
+    def _set_weeks_starting_dates(self) -> list[datetime.date]:
+        """Расчитывает начало отчетной недели и от него собирает строку с датами."""
+        first_day_of_week = self.date + datetime.timedelta(days=-self.date.weekday())
+        start_date = first_day_of_week - datetime.timedelta(weeks=4)
+        days_list = [start_date]
+        for i in range(1, self.report_range_weeks_count):
+            days_list.append(start_date + datetime.timedelta(weeks=i))
         logger.debug(f'{self.mcc=}, '
-                     f'{self.report_range=}, '
-                     f'_get_actual_sales ==> {sales}')
-        return sales
+                     f'_set_weeks_starting_dates ==> {days_list}')
+        return days_list
 
-    def _get_mirror_mcc_sales(self) -> list[int]:
+    def _get_actual_report_data(self,
+                                model: Model,
+                                value: str,
+                                attr_name: str = "quantity",
+                                use_mirror: bool = False
+                                ) -> list[int] | array:
+        """
+        Универсальный метод для заполнения табличек из кверисета или перебора циклом.
+        attrs: model - указание модели
+        value: какое поле из таблицы выбирать
+        """
+        mcc = self.mcc if not use_mirror else self.mcc.mirror_mcc
+        result_qs = model.objects.filter(
+            mcc=mcc,
+            week__in=self.report_range
+        ).select_related("mcc")
+        if result_qs.count() >= len(self.report_range):
+            logger.debug(f'{model} QS is full. Returning a values_list')
+            return result_qs.values_list(value, flat=True)
+
+        else:
+            logger.debug(f'{model} QS is not full. Iterating ove a QS by weeks')
+            weekly_report = array('L', [])
+            for week in self.report_range:
+                if data := model.objects.filter(
+                    mcc=self.mcc,
+                    week=week
+                ).select_related().first():
+                    weekly_report.append(getattr(data, attr_name))
+                else:
+                    weekly_report.append(0)
+            return weekly_report
+
+    def _get_actual_sales(self) -> list[int] | array:
+        # FIXME как по годам будет перенос недель???
+        return self._get_actual_report_data(Sales, "quantity")
+
+    def _get_mirror_mcc_sales(self) -> list[int] | array:
         if self.mcc.mirror_mcc:
-            return (
-                Sales.objects.filter(
-                    mcc=self.mcc.mirror_mcc,
-                    week__in=self.report_range
-                )
-                .select_related("mcc")
-                .values_list("quantity", flat=True)
-            )
+            return self._get_actual_report_data(Sales, "quantity", use_mirror=True)
         else:
             # Если миррор не присвоен, то берем от текущего МСС все МСС, что
             # выфильтровываются по 5 фильтрам и выводим средние продажи
@@ -89,11 +117,9 @@ class MccReport:
             return []
             # TODO доделаю позже, как разберусь с основной формой
 
-    def _get_stocks(self) -> list[int]:
-        stocks = Stock.objects.filter(
-                mcc=self.mcc,
-                week__in=self.report_range
-            ).select_related("mcc").values_list("stores_qty", flat=True)
+    def _get_weekly_stocks(self) -> list[int]:
+        stocks = self._get_actual_report_data(Stock, "stores_qty", attr_name="stores_qty")
+
         logger.debug(f'{self.mcc=}, '
                      f'{self.report_range=}, '
                      f'_get_stocks ==> {stocks}')
@@ -106,17 +132,85 @@ class MccReport:
     def _get_planned_sales(self):
         pass
 
-    def _get_mcc_metrics(self):
-        """Вытащить сюда все данные из пропертей"""
-        pass
+    def _get_country_stock(self) -> int:
+        """Сток страны (магазины + склад) на последнюю отчетную дату."""
+        return (
+            Stock.objects.filter(mcc=self.mcc)
+            .select_related()
+            .order_by("-date")
+            .first()
+            .country_qty
+        )
 
-    def generate(self):
+    def _get_stores_stock(self) -> int:
+        """Сток всех магазинов на последнюю отчетную дату."""
+        return (
+            Stock.objects.filter(mcc=self.mcc)
+            .select_related()
+            .order_by("-date")
+            .first()
+            .stores_qty
+        )
+
+    def _get_rotation(self) -> int:
+        week_ago = str(datetime.date.today() - datetime.timedelta(weeks=1))
+        try:
+            last_week_sales = (
+                Sales.objects.filter(
+                    mcc=self.mcc, date__range=[week_ago, str(datetime.date.today())]
+                )
+                .select_related("mcc")
+                .aggregate(Sum("quantity"))
+            )["quantity__sum"] or 0
+            return round(self._get_country_stock() / last_week_sales)
+        except (AttributeError, ZeroDivisionError):
+            return 0
+
+    def _get_sellthrough(self) -> float:
+        ordered = (
+            OrderItem.objects.filter(mcc=self.mcc)
+            .select_related("mcc")
+            .aggregate(Sum("purchased_qty"))
+        )["purchased_qty__sum"]
+        total_sales = (
+            Sales.objects.filter(mcc=self.mcc)
+            .select_related("mcc")
+            .aggregate(Sum("quantity"))
+        )["quantity__sum"]
+        return round(ordered / total_sales, 2)
+
+    def _get_pending_delivery(self) -> float:
+        pending = (
+            OrderItem.objects.filter(mcc=self.mcc)
+            .select_related("mcc")
+            .aggregate(Sum("final_qty"))
+        )["final_qty__sum"]
+        return pending
+
+    def _get_purchased_qty(self) -> int:
+        purchased_sum = (
+            OrderItem.objects.filter(mcc=self.mcc)
+            .select_related("mcc")
+            .aggregate(Sum("purchased_qty"))
+        )["purchased_qty__sum"]
+        logger.debug(f"Calculating purchased_sum ==> {purchased_sum} ")
+        return purchased_sum
+
+    def generate(self) -> dict[str, str | int | float]:
         """ Генерирует контекст для вывода на странице отчета. """
         return {
+            "country_stock": self._get_country_stock(),
+            "stores_stock": self._get_stores_stock(),
+            "rotation": self._get_rotation(),
+            "sellthrough": self._get_sellthrough(),
+            "pending_delivery": self._get_pending_delivery(),
+            "purchased": self._get_purchased_qty(),
+
+            "days": self._set_weeks_starting_dates(),
             "weeks": self._set_weeks_numbers(),
             "sales": self._get_actual_sales(),
             "mirror_mcc_sales": self._get_mirror_mcc_sales(),
-            "stocks": self._get_stocks()
+            "stocks": self._get_weekly_stocks()
         }
 
 # report = MccReport("000/0012/1231")
