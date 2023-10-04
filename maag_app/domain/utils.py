@@ -16,6 +16,7 @@ def get_latest_stock_report_date():
     except:
         pass
 
+
 def get_latest_orders_report_date():
     try:
         return Order.objects.order_by("-order_date").first().order_date

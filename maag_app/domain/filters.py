@@ -7,5 +7,9 @@ class MccFilter(django_filters.FilterSet):
     class Meta:
         model = Product
         fields = (
-            'subfamily', 'family', 'group', 'section', 'season',
+            "subfamily",
+            "family",
+            "group",
+            "section",
+            "season",
         )

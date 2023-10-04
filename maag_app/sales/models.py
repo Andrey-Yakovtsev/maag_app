@@ -6,9 +6,7 @@ from maag_app.domain.models import Product, ReportEntity
 
 
 class Sales(ReportEntity):
-    mcc = models.ForeignKey(
-        Product, related_name="sales", on_delete=models.CASCADE
-    )
+    mcc = models.ForeignKey(Product, related_name="sales", on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
     amount = models.IntegerField(default=0)
     planned = models.IntegerField(default=0)
@@ -19,5 +17,3 @@ class Sales(ReportEntity):
 
     def __str__(self):
         return f"{self.date} - {self.mcc.mcc} - {self.quantity}"
-
-

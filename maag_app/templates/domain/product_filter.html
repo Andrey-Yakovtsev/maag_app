@@ -46,166 +46,160 @@
                       <span class="input-group-append"><span class="input-group-text"><i class="mdi mdi-calendar-check"></i></span></span>
                     </div>
                   </div>
-                   <div class="text-black-50 ml-3">
-                      <div class="row">
-                        <small class="mr-2"><strong>Season:</strong>{{ obj.season }}</small>
-                        <small class="mr-2"><strong>Continuity:</strong>{{ obj.carry_over|yesno:"Yes,No" }}</small>
-                        <small class="mr-2"><strong>Description:</strong>{{ obj.description|default:"Description is not provided" }}</small>
-                      </div>
-                      <div class="row">
-                        <small class="mr-2"><strong>Purchased quantity:</strong>{{ obj.purchased }}</small>
-                        <small class="mr-2"><strong>Stores stock:</strong>{{ obj.stores_stock }}</small>
-                        <small class="mr-2"><strong>Country stock:</strong>{{ obj.country_stock }}</small>
-                        <small class="mr-2"><strong>Pending delivery:</strong>{{ obj.pending_delivery }}</small>
-                      </div>
-                      <div class="row">
-                        <small class="mr-2"><strong>Rotation:</strong>
-                          {% if obj.rotation > 6 %}
-                            <span class="badge badge-danger">{{ obj.rotation }} weeks</span></small>
-                        {% else %}
-                          <span class="badge badge-success">{{ obj.rotation }} weeks</span>
-                        {% endif %}
-                      </small>
-                      <small class="mr-2"><strong>Sellthrough:</strong>
-                        {% if obj.sellthrough > 10 %}
-                          <span class="badge badge-success">{{ obj.sellthrough }}%</span></small>
-                      {% else %}
-                        <span class="badge badge-danger">{{ obj.sellthrough }}%</span>
-                      {% endif %}
-                    </small>
-                  </div>
-                </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {% for obj in filter.qs %}
-            <div class="row">
-              <div class="col-12">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="row form-material">
-                      <div class="card-title col-8">MCC: {{ obj.mcc }}</div>
+                  <div class="text-black-50 ml-3">
+                    <div class="row">
+                      <small class="mr-2"><strong>Season:</strong>{{ obj.season }}</small>
+                      <small class="mr-2"><strong>Continuity:</strong>{{ obj.carry_over|yesno:"Yes,No" }}</small>
+                      <small class="mr-2"><strong>Description:</strong>{{ obj.description|default:"Description is not provided" }}</small>
                     </div>
-                    <div class="text-black-50 ml-3">
-                      <div class="row">
-                        <small class="mr-2"><strong>Season:</strong>{{ obj.season }}</small>
-                        <small class="mr-2"><strong>Continuity:</strong>{{ obj.carry_over|yesno:"Yes,No" }}</small>
-                        <small class="mr-2"><strong>Description:</strong>{{ obj.description|default:"Description is not provided" }}</small>
-                      </div>
-                      <div class="row">
-                        <small class="mr-2"><strong>Purchased quantity:</strong>{{ obj.purchased }}</small>
-                        <small class="mr-2"><strong>Stores stock:</strong>{{ obj.stores_stock }}</small>
-                        <small class="mr-2"><strong>Country stock:</strong>{{ obj.country_stock }}</small>
-                        <small class="mr-2"><strong>Pending delivery:</strong>{{ obj.pending_delivery }}</small>
-                      </div>
-                      <div class="row">
-                        <small class="mr-2"><strong>Rotation:</strong>
-                          {% if obj.rotation > 6 %}
-                            <span class="badge badge-danger">{{ obj.rotation }} weeks</span></small>
-                        {% else %}
-                          <span class="badge badge-success">{{ obj.rotation }} weeks</span>
-                        {% endif %}
-                      </small>
-                      <small class="mr-2"><strong>Sellthrough:</strong>
-                        {% if obj.sellthrough > 10 %}
-                          <span class="badge badge-success">{{ obj.sellthrough }}%</span></small>
+                    <div class="row">
+                      <small class="mr-2"><strong>Purchased quantity:</strong>{{ obj.purchased }}</small>
+                      <small class="mr-2"><strong>Stores stock:</strong>{{ obj.stores_stock }}</small>
+                      <small class="mr-2"><strong>Country stock:</strong>{{ obj.country_stock }}</small>
+                      <small class="mr-2"><strong>Pending delivery:</strong>{{ obj.pending_delivery }}</small>
+                    </div>
+                    <div class="row">
+                      <small class="mr-2"><strong>Rotation:</strong>
+                        {% if obj.rotation > 6 %}
+                          <span class="badge badge-danger">{{ obj.rotation }} weeks</span></small>
                       {% else %}
-                        <span class="badge badge-danger">{{ obj.sellthrough }}%</span>
+                        <span class="badge badge-success">{{ obj.rotation }} weeks</span>
                       {% endif %}
                     </small>
-                  </div>
-                </div>
-                <div class="table-responsive mt-0">
-                  <table class="table table-striped">
-                    <thead>
-                      <tr>
-                        <th>First day</th>
-                        {% for day in obj.start_days %}
-                        <td>{{day}}</td>
-                        {% endfor %}
-                      </tr>
-                    </thead>
-                    <tbody>
-                       <tr>
-                        <td>Week number</td>
-                        {% for week in obj.week_numbers %}
-                        <td>{{week}}</td>
-                        {% endfor %}
-                      </tr>
-                      <tr>
-                        <td>Reference MCC Sales</td>
-                        {% for mirror_mcc in obj.mirror_mcc_sales %}
-                        <td>{{mirror_mcc|default:0 }} </td>
-                        {% endfor %}
-                      </tr>
-                      <tr>
-                        <td>Actual Sales</td>
-                       {% for sales in obj.sales_result %}
-                          {% if sales != "" %}
-                            <td>{{sales}}</td>
-                          {% else %}
-                            <td>--</td>
-                          {% endif %}
-                        {% endfor %}
-                      </tr>
-                      <tr>
-                        <td>Stocks</td>
-                       {% for stockday in obj.stocks_data %}
-                        <td>{{stockday|default:"0"}}</td>
-                        {% endfor %}
-                      </tr>
-                      <tr>
-                        <td>Planned Sales</td>
-                        <td>
-                          <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                        </td>
-                        <td>
-                          <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                        </td>
-                        <td>
-                          <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                        </td>
-                        <td>
-                          <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                        </td>
-                        <td>
-                          <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                        </td>
-                        <td>
-                          <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                        </td>
-                        <td>
-                          <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                        </td>
-                        <td>
-                          <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                        </td>
-                        <td>
-                          <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                        </td>
-                        <td>
-                          <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                        </td>
-                        <td>
-                          <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                        </td>
-                      </tr>
-                      {#                        {% endfor %}#}
-                    </tbody>
-                  </table>
+                    <small class="mr-2"><strong>Sellthrough:</strong>
+                      {% if obj.sellthrough > 10 %}
+                        <span class="badge badge-success">{{ obj.sellthrough }}%</span></small>
+                    {% else %}
+                      <span class="badge badge-danger">{{ obj.sellthrough }}%</span>
+                    {% endif %}
+                  </small>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      {% endfor %}
-      <!-- #/ container -->
+      </div>
+      {% for obj in filter.qs %}
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="row form-material">
+                  <div class="card-title col-8">MCC: {{ obj.mcc }}</div>
+                </div>
+                <div class="text-black-50 ml-3">
+                  <div class="row">
+                    <small class="mr-2"><strong>Season:</strong>{{ obj.season }}</small>
+                    <small class="mr-2"><strong>Continuity:</strong>{{ obj.carry_over|yesno:"Yes,No" }}</small>
+                    <small class="mr-2"><strong>Description:</strong>{{ obj.description|default:"Description is not provided" }}</small>
+                  </div>
+                  <div class="row">
+                    <small class="mr-2"><strong>Purchased quantity:</strong>{{ obj.purchased }}</small>
+                    <small class="mr-2"><strong>Stores stock:</strong>{{ obj.stores_stock }}</small>
+                    <small class="mr-2"><strong>Country stock:</strong>{{ obj.country_stock }}</small>
+                    <small class="mr-2"><strong>Pending delivery:</strong>{{ obj.pending_delivery }}</small>
+                  </div>
+                  <div class="row">
+                    <small class="mr-2"><strong>Rotation:</strong>
+                      {% if obj.rotation > 6 %}
+                        <span class="badge badge-danger">{{ obj.rotation }} weeks</span></small>
+                    {% else %}
+                      <span class="badge badge-success">{{ obj.rotation }} weeks</span>
+                    {% endif %}
+                  </small>
+                  <small class="mr-2"><strong>Sellthrough:</strong>
+                    {% if obj.sellthrough > 10 %}
+                      <span class="badge badge-success">{{ obj.sellthrough }}%</span></small>
+                  {% else %}
+                    <span class="badge badge-danger">{{ obj.sellthrough }}%</span>
+                  {% endif %}
+                </small>
+              </div>
+            </div>
+            <div class="table-responsive mt-0">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>First day</th>
+                    {% for day in obj.start_days %}<td>{{ day }}</td>{% endfor %}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Week number</td>
+                    {% for week in obj.week_numbers %}<td>{{ week }}</td>{% endfor %}
+                  </tr>
+                  <tr>
+                    <td>Reference MCC Sales</td>
+                    {% for mirror_mcc in obj.mirror_mcc_sales %}
+                      <td>{{ mirror_mcc|default:0 }}</td>
+                    {% endfor %}
+                  </tr>
+                  <tr>
+                    <td>Actual Sales</td>
+                    {% for sales in obj.sales_result %}
+                      {% if sales != "" %}
+                        <td>{{ sales }}</td>
+                      {% else %}
+                        <td>--</td>
+                      {% endif %}
+                    {% endfor %}
+                  </tr>
+                  <tr>
+                    <td>Stocks</td>
+                    {% for stockday in obj.stocks_data %}<td>{{ stockday|default:"0" }}</td>{% endfor %}
+                  </tr>
+                  <tr>
+                    <td>Planned Sales</td>
+                    <td>
+                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
+                    </td>
+                    <td>
+                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
+                    </td>
+                    <td>
+                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
+                    </td>
+                    <td>
+                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
+                    </td>
+                    <td>
+                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
+                    </td>
+                    <td>
+                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
+                    </td>
+                    <td>
+                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
+                    </td>
+                    <td>
+                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
+                    </td>
+                    <td>
+                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
+                    </td>
+                    <td>
+                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
+                    </td>
+                    <td>
+                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
+                    </td>
+                  </tr>
+                  {#                        {% endfor %}#}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <!--**********************************
+  {% endfor %}
+  <!-- #/ container -->
+</div>
+<!--**********************************
             Content body end
         ***********************************-->
-  </div>
+</div>
 {% endblock mainbody %}
 </div>
 <!--**********************************

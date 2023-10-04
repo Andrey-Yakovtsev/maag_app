@@ -50,15 +50,26 @@ CSRF_COOKIE_SECURE = True
 # TODO: set this to 60 seconds first and then to 518400 once you prove the former works
 SECURE_HSTS_SECONDS = 60
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-include-subdomains
-SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool("DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", default=True)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool(
+    "DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", default=True
+)
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-preload
 SECURE_HSTS_PRELOAD = env.bool("DJANGO_SECURE_HSTS_PRELOAD", default=True)
 # https://docs.djangoproject.com/en/dev/ref/middleware/#x-content-type-options-nosniff
-SECURE_CONTENT_TYPE_NOSNIFF = env.bool("DJANGO_SECURE_CONTENT_TYPE_NOSNIFF", default=True)
+SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
+    "DJANGO_SECURE_CONTENT_TYPE_NOSNIFF", default=True
+)
 
 # STATIC
 # ------------------------
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 # MEDIA
 # ------------------------------------------------------------------------------
 
@@ -92,7 +103,9 @@ INSTALLED_APPS += ["anymail"]  # noqa: F405
 EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
 ANYMAIL = {
     "SENDINBLUE_API_KEY": env("SENDINBLUE_API_KEY"),
-    "SENDINBLUE_API_URL": env("SENDINBLUE_API_URL", default="https://api.sendinblue.com/v3/"),
+    "SENDINBLUE_API_URL": env(
+        "SENDINBLUE_API_URL", default="https://api.sendinblue.com/v3/"
+    ),
 }
 
 
