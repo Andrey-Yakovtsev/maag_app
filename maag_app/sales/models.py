@@ -2,7 +2,7 @@ import abc
 
 from django.db import models
 
-from maag_app.domain.models import Product, ReportEntity
+from maag_app.products.models import Product, ReportEntity
 
 
 class Sales(ReportEntity):

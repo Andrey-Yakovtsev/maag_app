@@ -1,4 +1,5 @@
 import datetime
+from typing import Self
 
 from django.db import models
 
@@ -11,20 +12,20 @@ class ReportEntity(models.Model):
     class Meta:
         abstract = True
 
-    def _add_week_number(self):
+    def _add_week_number(self) -> None:
         self.week = self.date.isocalendar()[1]
 
-    def _add_year(self):
+    def _add_year(self) -> None:
         self.year = self.date.year
 
-    def save(self):
+    def save(self, *args, **kwargs) -> None:
         self._add_week_number()
         self._add_year()
-        super().save()
+        super().save(*args, **kwargs)
 
 
 class ProductEnumFilter(models.Model):
-    name = models.CharField(blank=False, unique=True)
+    name: str = models.CharField(blank=False, unique=True)
 
     class Meta:
         abstract = True
@@ -54,23 +55,25 @@ class Season(ProductEnumFilter):
 
 
 class Product(models.Model):
-    mcc = models.CharField(blank=False, unique=True)
-    description = models.CharField(max_length=512, default="")
-    subfamily = models.ForeignKey(
+    mcc: str = models.CharField(blank=False, unique=True)
+    description: str = models.CharField(max_length=512, default="")
+    subfamily: Subfamily = models.ForeignKey(
         Subfamily, related_name="products", on_delete=models.CASCADE
     )
-    family = models.ForeignKey(
+    family: Family = models.ForeignKey(
         Family, related_name="products", on_delete=models.CASCADE
     )
-    group = models.ForeignKey(Group, related_name="products", on_delete=models.CASCADE)
-    section = models.ForeignKey(
+    group: Group = models.ForeignKey(
+        Group, related_name="products", on_delete=models.CASCADE
+    )
+    section: Section = models.ForeignKey(
         Section, related_name="products", on_delete=models.CASCADE
     )
-    season = models.ForeignKey(
+    season: Season = models.ForeignKey(
         Season, related_name="products", on_delete=models.CASCADE
     )
-    carry_over = models.BooleanField(default=False)
-    mirror_mcc = models.OneToOneField(
+    carry_over: bool = models.BooleanField(default=False)
+    mirror_mcc: Self = models.OneToOneField(
         "Product", null=True, blank=True, on_delete=models.DO_NOTHING
     )
 

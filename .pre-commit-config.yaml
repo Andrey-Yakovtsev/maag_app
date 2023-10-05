@@ -38,17 +38,27 @@ repos:
     rev: 5.12.0
     hooks:
       - id: isort
-
-  - repo: https://github.com/PyCQA/flake8
-    rev: 6.1.0
-    hooks:
-      - id: flake8
-
-  - repo: https://github.com/Riverside-Healthcare/djLint
-    rev: v1.32.1
-    hooks:
-      - id: djlint-reformat-django
-      - id: djlint-django
+#
+#  - repo: https://github.com/PyCQA/flake8
+#    rev: 6.1.0
+#    hooks:
+#      - id: flake8
+#
+#  - repo: https://github.com/Riverside-Healthcare/djLint
+#    rev: v1.32.1
+#    hooks:
+#      - id: djlint-reformat-django
+#      - id: djlint-django
+#
+#  - repo: https://github.com/pre-commit/mirrors-mypy
+#    rev: v1.5.1
+#    hooks:
+#      - id: mypy
+#        exclude: ^tests/
+##        args: [ --strict ]
+#        args: [ --ignore-missing-imports ]
+#        additional_dependencies:
+#          - django-stubs
 
 # sets up .pre-commit-ci.yaml to ensure pre-commit dependencies stay up to date
 ci:

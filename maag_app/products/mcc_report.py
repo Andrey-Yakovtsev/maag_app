@@ -12,7 +12,7 @@ from maag_app.orders.models import OrderItem
 logger = logging.getLogger(__name__)
 
 
-from maag_app.domain.models import Product
+from maag_app.products.models import Product
 from maag_app.sales.models import Sales
 from maag_app.stocks.models import Stock
 
@@ -137,23 +137,32 @@ class MccReport:
 
     def _get_country_stock(self) -> int:
         """Сток страны (магазины + склад) на последнюю отчетную дату."""
-        return (
-            Stock.objects.filter(mcc=self.mcc)
-            .select_related()
-            .order_by("-date")
-            .first()
-            .country_qty
-        )
+        try:
+            return (
+                Stock.objects.filter(mcc=self.mcc)
+                .select_related()
+                .order_by("-date")
+                .first()
+                .country_qty
+            )
+
+        except AttributeError as err:
+            logger.error(f"Country stock QS returned empty. Error: {err}")
+            return 0
 
     def _get_stores_stock(self) -> int:
         """Сток всех магазинов на последнюю отчетную дату."""
-        return (
-            Stock.objects.filter(mcc=self.mcc)
-            .select_related()
-            .order_by("-date")
-            .first()
-            .stores_qty
-        )
+        try:
+            return (
+                Stock.objects.filter(mcc=self.mcc)
+                .select_related()
+                .order_by("-date")
+                .first()
+                .stores_qty
+            )
+        except AttributeError as err:
+            logger.error(f"Stores stock QS returned empty. Error: {err}")
+            return 0
 
     def _get_rotation(self) -> int:
         week_ago = str(datetime.date.today() - datetime.timedelta(weeks=1))
@@ -199,7 +208,9 @@ class MccReport:
         logger.debug(f"Calculating purchased_sum ==> {purchased_sum} ")
         return purchased_sum
 
-    def generate(self) -> dict[str, str | int | float]:
+    def generate(
+        self,
+    ) -> dict[str, str | list[int] | set[int] | float | list[datetime.date] | array]:
         """Генерирует контекст для вывода на странице отчета."""
         return {
             "country_stock": self._get_country_stock(),

@@ -1,6 +1,6 @@
 from django.db import models
 
-from maag_app.domain.models import Product
+from maag_app.products.models import Product
 
 
 class Order(models.Model):

@@ -1,6 +1,6 @@
 import django_filters
 
-from maag_app.domain.models import Product
+from maag_app.products.models import Product
 
 
 class MccFilter(django_filters.FilterSet):

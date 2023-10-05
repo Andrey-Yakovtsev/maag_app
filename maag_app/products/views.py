@@ -4,10 +4,10 @@ from django.http import HttpResponse
 from django.template import loader
 from django_filters.views import FilterView
 
-from maag_app.domain.filters import MccFilter
-from maag_app.domain.mcc_report import MccReport
-from maag_app.domain.models import Product
-from maag_app.domain.utils import (
+from maag_app.products.filters import MccFilter
+from maag_app.products.mcc_report import MccReport
+from maag_app.products.models import Product
+from maag_app.products.utils import (
     get_latest_orders_report_date,
     get_latest_sales_report_date,
     get_latest_stock_report_date,
