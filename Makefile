@@ -40,3 +40,7 @@ migrations:
 migrate:
 	sudo docker stop maag_app_local_django
 	sudo docker-compose -f local.yml run --rm django python manage.py migrate
+
+fill_db:
+	sudo docker stop maag_app_local_django
+	sudo docker-compose -f local.yml run --rm django python manage.py init_db_fulfilment
