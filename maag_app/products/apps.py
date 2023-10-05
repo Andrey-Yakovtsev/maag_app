@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class DomainConfig(AppConfig):
+class ProductConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "maag_app.domain"
+    name = "maag_app.products"

@@ -26,6 +26,7 @@ killl:
 	sudo docker-compose -f local.yml down -v
 
 superuserl:
+	sudo docker stop maag_app_local_django
 	sudo docker-compose -f local.yml run --rm django python manage.py createsuperuser
 
 shelll:
@@ -33,7 +34,9 @@ shelll:
 	sudo docker-compose -f local.yml run --rm django python manage.py shell_plus
 
 migrations:
+	sudo docker stop maag_app_local_django
 	sudo docker-compose -f local.yml run --rm django python manage.py makemigrations
 
 migrate:
+	sudo docker stop maag_app_local_django
 	sudo docker-compose -f local.yml run --rm django python manage.py migrate

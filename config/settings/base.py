@@ -84,7 +84,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "maag_app.users",
     # Your stuff: custom apps go here
-    "maag_app.domain",
+    "maag_app.products",
     "maag_app.sales",
     "maag_app.stocks",
     "maag_app.orders",
