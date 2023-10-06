@@ -5,11 +5,61 @@ MAAG App
 [![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg?logo=cookiecutter)](https://github.com/cookiecutter/cookiecutter-django/)
 [![Black code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
-## Settings
+
+## Основные команды
+
+Запилил все Основные команды на [Make-file](Makefile):
+
+Если у тебя линукс - make-команда содержит постфикс - l.
+Типа `buildup` - для мака и `buildupl` - для линукса.
+Это потому что подман на линуксе стартует через старую версию docker-compose (через дефис)
+
+Собрать и поднять проект `make buildup`
+
+Поднять уже собраный проект `make up`
+
+Опустить контейнеры `make down`
+
+Опустить контейнеры, удалить все данные и прибинденные вольюмы
+  `make kill`
+
+Некоторые команды в текущей версии шаблона кукикаттер просят, чтобы основной контейнер с приложением гасился
+для выполнения команд связанных с приложением. Типа миграции или шелл.
+Для таких случаев в после выполнения команды надо сделать `make up`
+
+**Пример для линукса:**
+
+пошел в шелл, что-то поделал:
+  `make shelll`
+потом поднял основной конт на место:
+``make upl``
+
+
+### Как поднять проект.
+После того, как затащил проект (на примере Линукс-версии):
+1. `make buildupl`
+2. `make superuserl` - обрати внимание - логин по и-мейлу
+3. `make fill_db` - скрипт заполнения БД моками
+
+Если по какой-то причине миграции не поднялись. Но должы сами при сборке.
+1. `make migrations`
+1. `make migrate` и снова
+3. `make fill_db`
+
+
+### PG-Admin
+
+На http://localhost:5050/
+Найдешь контейнер с PG-admin.
+Креды вот:
+      PGADMIN_DEFAULT_EMAIL: 123@email.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+Вообще они лежат в файлике для локальной сборки [local.yaml](local.yml)
+
+
+### Settings
 
 Moved to [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
-
-## Basic Commands
 
 ### Setting Up Your Users
 

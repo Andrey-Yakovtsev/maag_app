@@ -13,6 +13,8 @@ kill:
 superuser:
 	docker compose -f local.yml run --rm django python manage.py createsuperuser
 
+# Линуксовые версии
+
 buildupl:
 	sudo docker-compose -f local.yml up --build
 
