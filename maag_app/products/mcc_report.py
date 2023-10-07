@@ -6,8 +6,10 @@ import logging
 from array import array
 
 from django.db.models import Model, Sum
+from django.forms import forms
 
 from maag_app.orders.models import OrderItem
+from maag_app.products.forms import PlannedForm
 
 logger = logging.getLogger(__name__)
 
@@ -87,11 +89,11 @@ class MccReport:
             mcc=mcc, week__in=self.report_range
         ).select_related("mcc")
         if result_qs.count() >= len(self.report_range):
-            logger.debug(f"{model} QS is full. Returning a values_list")
+            logger.info(f"{model} QS is full. Returning a values_list")
             return result_qs.values_list(value, flat=True)
 
         else:
-            logger.debug(f"{model} QS is not full. Iterating ove a QS by weeks")
+            logger.info(f"{model} QS is not full. Iterating ove a QS by weeks")
             weekly_report = array("L", [])
             for week in self.report_range:
                 if (
@@ -107,6 +109,10 @@ class MccReport:
     def _get_actual_sales(self) -> list[int] | array:
         # FIXME как по годам будет перенос недель???
         return self._get_actual_report_data(Sales, "quantity")
+
+    def _get_planned_sales(self) -> list[int] | array:
+        # FIXME как по годам будет перенос недель???
+        return self._get_actual_report_data(Sales, "planned")
 
     def _get_mirror_mcc_sales(self) -> list[int] | array:
         if self.mcc.mirror_mcc:
@@ -130,9 +136,6 @@ class MccReport:
 
     def _get_aggergated_data(self):
         """ВСе добытые МСС агреггируем тут"""
-        pass
-
-    def _get_planned_sales(self):
         pass
 
     def _get_country_stock(self) -> int:
@@ -221,7 +224,8 @@ class MccReport:
             "purchased": self._get_purchased_qty(),
             "days": self._set_weeks_starting_dates(),
             "weeks": self._set_weeks_numbers(),
-            "sales": self._get_actual_sales(),
+            "actual_sales": self._get_actual_sales(),
+            "planned_sales": self._get_planned_sales(),
             "mirror_mcc_sales": self._get_mirror_mcc_sales(),
             "stocks": self._get_weekly_stocks(),
         }

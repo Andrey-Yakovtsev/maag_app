@@ -42,7 +42,7 @@
                     <div class="card-title col-8">Aggregated report</div>
                     <div class="col-4 input-group  align-self-end">
                       <div class="mr-2 mt-3">Select store entry date</div>
-                      <input type="text" class="form-control datepicker" placeholder="mm/dd/yyyy" />
+                      <input type="text" class="form-control mydatepicker" placeholder="mm/dd/yyyy">
                       <span class="input-group-append"><span class="input-group-text"><i class="mdi mdi-calendar-check"></i></span></span>
                     </div>
                   </div>
@@ -150,42 +150,24 @@
                     {% for stockday in obj.stocks_data %}<td>{{ stockday|default:"0" }}</td>{% endfor %}
                   </tr>
                   <tr>
-                    <td>Planned Sales</td>
-                    <td>
-                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                    </td>
-                    <td>
-                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                    </td>
-                    <td>
-                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                    </td>
-                    <td>
-                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                    </td>
-                    <td>
-                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                    </td>
-                    <td>
-                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                    </td>
-                    <td>
-                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                    </td>
-                    <td>
-                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                    </td>
-                    <td>
-                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                    </td>
-                    <td>
-                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                    </td>
-                    <td>
-                      <input type="search" class="form-control-sm col-6" aria-label="Order units" />
-                    </td>
+                    <td>Planned Sales fix</td>
+                    {% for plan in obj.sales_plans %}
+                      <td>{{ plan|default:"0" }}</td>
+                    {% endfor %}
                   </tr>
-                  {#                        {% endfor %}#}
+                  <tr>
+                    <td>Planned Sales</td>
+                    {% for plan in obj.sales_plans %}
+                    <td>
+<!--                      <form action="reports/planned-sales/">-->
+                      <form action="{% url 'domain:sales_plans'%}" method="post">
+                        {% csrf_token %}
+                       <input type="text" class="form-control-sm col-6" aria-label="Order units" value="{{ plan }}" />
+                        <input type="submit" value="In">
+                      </form>
+                    </td>
+                    {% endfor %}
+                  </tr>
                 </tbody>
               </table>
             </div>

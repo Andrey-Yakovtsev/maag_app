@@ -72,11 +72,15 @@ class Command(BaseCommand):
             prdct = models.Product.objects.get(mcc=mcc)
             for i in range(52):
                 qty = random.randint(1, 50)
-                stores_qty = 3000 * (1 + mccs.index(mcc) / 10)
+                stores_qty = random.randint(200, 300)
                 Sales.objects.update_or_create(
                     mcc=prdct,
                     date=report_date,
-                    defaults={"quantity": qty, "amount": qty * 1099},
+                    defaults={
+                        "quantity": qty,
+                        "amount": qty * 1099,
+                        "planned": random.randint(1, 50),
+                    },
                 )
                 Stock.objects.update_or_create(
                     mcc=prdct,

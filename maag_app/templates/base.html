@@ -25,7 +25,9 @@
       <!-- Date picker plugins css -->
       <link href="{% static './plugins/bootstrap-datepicker/bootstrap-datepicker.min.css' %}"
             rel="stylesheet" />
-      <!-- Chartist -->
+      <link href="{% static './plugins/bootstrap-daterangepicker/daterangepicker.css' %}"
+            rel="stylesheet" />
+     <!-- Chartist -->
       <link rel="stylesheet"
             href="{% static './plugins/chartist/css/chartist.min.css' %}" />
       <link rel="stylesheet"
@@ -849,14 +851,19 @@
       <!--**********************************
         Scripts
     ***********************************-->
-      <script src="{% static 'plugins/common/common.min.js' %}"></script>
-      <script src="{% static 'js/custom.min.js' %}"></script>
-      <script src="{% static 'js/settings.js' %}"></script>
-      <script src="{% static 'js/gleek.js' %}"></script>
-      <script src="{% static 'js/styleSwitcher.js' %}"></script>
+      <script src="{% static './plugins/common/common.min.js' %}"></script>
+      <script src="{% static './js/custom.min.js' %}"></script>
+      <script src="{% static './js/settings.js' %}"></script>
+      <script src="{% static './js/gleek.js' %}"></script>
+      <script src="{% static './js/styleSwitcher.js' %}"></script>
+      <script src="{% static './plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}"></script>
       <!-- Circle progress -->
       <script src="{% static './plugins/circle-progress/circle-progress.min.js' %}"></script>
       <script src="{% static './js/dashboard/dashboard-1.js' %}"></script>
+      <!-- Date Plugin JavaScript -->
+      <script src="{% static './plugins/timepicker/bootstrap-timepicker.min.js' %}"></script>
+      <script src="{% static './plugins/bootstrap-datepicker/bootstrap-datepicker.min.js' %}"></script>
+      <script src="{% static './js/plugins-init/form-pickers-init.js' %}"></script>
     {% endblock basescripts %}
     {% block extrascripts %}
       <!-- Chartjs -->
