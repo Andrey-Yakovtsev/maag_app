@@ -85,14 +85,13 @@ class MccReport:
         value: какое поле из таблицы выбирать
         """
         mcc = self.mcc if not use_mirror else self.mcc.mirror_mcc
-        logger.info(f"REPORT RANGE WEEKS {self.report_range=}")
-        result_qs = model.objects.filter(
-            mcc=mcc, week__in=self.report_range
-        ).select_related("mcc")
+        result_qs = (
+            model.objects.filter(mcc=mcc, week__in=self.report_range)
+            .select_related("mcc")
+            .order_by("year", "week")
+        )
         if result_qs.count() >= len(self.report_range):
-            # logger.info(f"{model} QS is full. Returning a values_list")
-            logger.info(f"{result_qs.values_list(value, flat=True)=}")
-            logger.info(f"QS without FLAT{result_qs=}")
+            logger.debug(f"{model} QS is full. Returning a flat list")
             return result_qs.values_list(value, flat=True)
 
         else:
@@ -102,6 +101,7 @@ class MccReport:
                 if (
                     data := model.objects.filter(mcc=self.mcc, week=week)
                     .select_related()
+                    .order_by("year", "week")
                     .first()
                 ):
                     weekly_report.append(getattr(data, attr_name))
@@ -114,17 +114,12 @@ class MccReport:
         return self._get_actual_report_data(Sales, "quantity")
 
     def _get_planned_sales(self) -> list[dict[str, int]]:
-        # FIXME как по годам будет перенос недель???
         plans = self._get_actual_report_data(Sales, "planned")
         days = self._set_weeks_starting_dates()
-        # logger.info(f"PLANS {plans=}")
-        # logger.info(f"DAYS {days=}")
         report = []
         result = dict(zip(days, plans))
-        logger.info(f"PLANNED ZIP {result=}")
         for k, v in result.items():
             report.append({"day": k, "plan": v})
-        logger.info(f"PLANNED {report=}")
         return report
 
     def _get_mirror_mcc_sales(self) -> list[int] | array:

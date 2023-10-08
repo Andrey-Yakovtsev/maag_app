@@ -10,6 +10,13 @@ from maag_app.sales.models import Sales
 from maag_app.stocks.models import Stock
 
 
+def add_mirror_to_mcc(base, mirror):
+    base_mcc = models.Product.objects.get(mcc=base)
+    mirror_mcc = models.Product.objects.get(mcc=mirror)
+    base_mcc.mirror_mcc = mirror_mcc
+    base_mcc.save(update_fields=["mirror_mcc"])
+
+
 class Command(BaseCommand):
     help = "Initial database filling with most nesseccary data"
 
@@ -45,6 +52,9 @@ class Command(BaseCommand):
             "8888/555/555",
             "9999/555/555",
             "5555/453/333",
+            "1111/000/000",
+            "2221/000/000",
+            "3333/000/000",
         ]
 
         counter = 1
@@ -66,11 +76,14 @@ class Command(BaseCommand):
 
         for mcc in mccs:
             datetime_str = "03/01/2023"
+            years_period = 1
+            # datetime_str = "03/01/2022" # На случай, если за 2 года надо создать
+            # years_period = 2
 
             start_date = datetime.strptime(datetime_str, "%d/%m/%Y")
             report_date = start_date
             prdct = models.Product.objects.get(mcc=mcc)
-            for i in range(52):
+            for i in range(52 * years_period):
                 qty = random.randint(1, 50)
                 stores_qty = random.randint(200, 300)
                 Sales.objects.update_or_create(
@@ -104,5 +117,8 @@ class Command(BaseCommand):
                     "final_qty": random.randint(500, 1000),
                 },
             )
+        add_mirror_to_mcc("1111/111/111", "1111/000/000")
+        add_mirror_to_mcc("2221/222/222", "2221/000/000")
+        add_mirror_to_mcc("3333/333/333", "3333/000/000")
 
         print("Success!!! All DB entries created")

@@ -77,25 +77,20 @@ class MccReportView(FilterView):
             mcc.start_days = report["days"]
             mcc.mirror_mcc_sales = report["mirror_mcc_sales"]
             mcc.stocks_data = report["stocks"]
-            # logger.info(f"MCC DATA ==> {mcc.__dict__}")
+            logger.debug(f"MCC DATA ==> {mcc.__dict__}")
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
         form = PlannedForm(request.POST)
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # TODO Доделать валидацию и запиьс значений
-            #  Проверить на отправку говна в форму...
-            logger.info(f"FORM CLEANED DATA SALES ==> {form.cleaned_data}")
             week = form.cleaned_data["date"].isocalendar()[1]
             year = form.cleaned_data["date"].year
-            logger.info(f"LOGGED WEEK {week} ==> DATE {form.cleaned_data['date']}")
-
             obj, _ = Sales.objects.update_or_create(
                 mcc=form.cleaned_data["mcc"],
                 year=year,
                 week=week,
                 defaults={"planned": form.cleaned_data["planned"]},
             )
-            logger.info(f"Sales plan entry updated or created: {obj}")
+            logger.debug(f"Sales plan entry updated or created: {obj}")
             return self.get(request, *args, **kwargs)
+        return self.get(request, *args, **kwargs)
