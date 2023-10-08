@@ -3,75 +3,75 @@
 {% load static %}
 
 <body>
+<!--**********************************
+      Main wrapper start
+  ***********************************-->
+<div id="main-wrapper">
+  {% block mainbody %}
   <!--**********************************
-        Main wrapper start
+        Content body start
     ***********************************-->
-  <div id="main-wrapper">
-    {% block mainbody %}
-      <!--**********************************
-            Content body start
-        ***********************************-->
-      <div class="content-body">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">MCC Report</h4>
-                  <div class="form-group">
-                    <form method="get">
-                      {{ filter.form.as_table }}
-                      <input type="submit" />
-                    </form>
-                  </div>
-                  <div class="row ml-0">
-                    <small class="mr-4"><strong>Latest reports dates</strong></small>
-                    <small class="text-black-50 mr-3"><strong>Sales:</strong>{{ dates.sales|date:"d/m/Y" }}</small>
-                    <small class="text-black-50 mr-3"><strong>Stocks:</strong>{{ dates.stock|date:"d/m/Y" }}</small>
-                    <small class="text-black-50 mr-3"><strong>Orders:</strong>{{ dates.orders|date:"d/m/Y" }}</small>
-                  </div>
-                </div>
+  <div class="content-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">MCC Report</h4>
+              <div class="form-group">
+                <form method="get">
+                  {{ filter.form.as_table }}
+                  <input type="submit" />
+                </form>
+              </div>
+              <div class="row ml-0">
+                <small class="mr-4"><strong>Latest reports dates</strong></small>
+                <small class="text-black-50 mr-3"><strong>Sales:</strong>{{ dates.sales|date:"d/m/Y" }}</small>
+                <small class="text-black-50 mr-3"><strong>Stocks:</strong>{{ dates.stock|date:"d/m/Y" }}</small>
+                <small class="text-black-50 mr-3"><strong>Orders:</strong>{{ dates.orders|date:"d/m/Y" }}</small>
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-body">
-                  <div class="row form-material">
-                    <div class="card-title col-8">Aggregated report</div>
-                    <div class="col-4 input-group  align-self-end">
-                      <div class="mr-2 mt-3">Select store entry date</div>
-                      <input type="text" class="form-control mydatepicker" placeholder="mm/dd/yyyy">
-                      <span class="input-group-append"><span class="input-group-text"><i class="mdi mdi-calendar-check"></i></span></span>
-                    </div>
-                  </div>
-                  <div class="text-black-50 ml-3">
-                    <div class="row">
-                      <small class="mr-2"><strong>Season:</strong>{{ obj.season }}</small>
-                      <small class="mr-2"><strong>Continuity:</strong>{{ obj.carry_over|yesno:"Yes,No" }}</small>
-                      <small class="mr-2"><strong>Description:</strong>{{ obj.description|default:"Description is not provided" }}</small>
-                    </div>
-                    <div class="row">
-                      <small class="mr-2"><strong>Purchased quantity:</strong>{{ obj.purchased }}</small>
-                      <small class="mr-2"><strong>Stores stock:</strong>{{ obj.stores_stock }}</small>
-                      <small class="mr-2"><strong>Country stock:</strong>{{ obj.country_stock }}</small>
-                      <small class="mr-2"><strong>Pending delivery:</strong>{{ obj.pending_delivery }}</small>
-                    </div>
-                    <div class="row">
-                      <small class="mr-2"><strong>Rotation:</strong>
-                        {% if obj.rotation > 6 %}
-                          <span class="badge badge-danger">{{ obj.rotation }} weeks</span></small>
-                      {% else %}
-                        <span class="badge badge-success">{{ obj.rotation }} weeks</span>
-                      {% endif %}
-                    </small>
-                    <small class="mr-2"><strong>Sellthrough:</strong>
-                      {% if obj.sellthrough > 10 %}
-                        <span class="badge badge-success">{{ obj.sellthrough }}%</span></small>
-                    {% else %}
-                      <span class="badge badge-danger">{{ obj.sellthrough }}%</span>
-                    {% endif %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row form-material">
+                <div class="card-title col-8">Aggregated report</div>
+                <div class="col-4 input-group  align-self-end">
+                  <div class="mr-2 mt-3">Select store entry date</div>
+                  <input type="text" class="form-control mydatepicker" placeholder="mm/dd/yyyy">
+                  <span class="input-group-append"><span class="input-group-text"><i class="mdi mdi-calendar-check"></i></span></span>
+                </div>
+              </div>
+              <div class="text-black-50 ml-3">
+                <div class="row">
+                  <small class="mr-2"><strong>Season:</strong>{{ obj.season }}</small>
+                  <small class="mr-2"><strong>Continuity:</strong>{{ obj.carry_over|yesno:"Yes,No" }}</small>
+                  <small class="mr-2"><strong>Description:</strong>{{ obj.description|default:"Description is not provided" }}</small>
+                </div>
+                <div class="row">
+                  <small class="mr-2"><strong>Purchased quantity:</strong>{{ obj.purchased }}</small>
+                  <small class="mr-2"><strong>Stores stock:</strong>{{ obj.stores_stock }}</small>
+                  <small class="mr-2"><strong>Country stock:</strong>{{ obj.country_stock }}</small>
+                  <small class="mr-2"><strong>Pending delivery:</strong>{{ obj.pending_delivery }}</small>
+                </div>
+                <div class="row">
+                  <small class="mr-2"><strong>Rotation:</strong>
+                    {% if obj.rotation > 6 %}
+                    <span class="badge badge-danger">{{ obj.rotation }} weeks</span></small>
+                  {% else %}
+                  <span class="badge badge-success">{{ obj.rotation }} weeks</span>
+                  {% endif %}
+                  </small>
+                  <small class="mr-2"><strong>Sellthrough:</strong>
+                    {% if obj.sellthrough > 10 %}
+                    <span class="badge badge-success">{{ obj.sellthrough }}%</span></small>
+                  {% else %}
+                  <span class="badge badge-danger">{{ obj.sellthrough }}%</span>
+                  {% endif %}
                   </small>
                 </div>
               </div>
@@ -80,51 +80,51 @@
         </div>
       </div>
       {% for obj in filter.qs %}
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-body">
-                <div class="row form-material">
-                  <div class="card-title col-8">MCC: {{ obj.mcc }}</div>
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row form-material">
+                <div class="card-title col-8">MCC: {{ obj.mcc }}</div>
+              </div>
+              <div class="text-black-50 ml-3">
+                <div class="row">
+                  <small class="mr-2"><strong>Season:</strong>{{ obj.season }}</small>
+                  <small class="mr-2"><strong>Continuity:</strong>{{ obj.carry_over|yesno:"Yes,No" }}</small>
+                  <small class="mr-2"><strong>Description:</strong>{{ obj.description|default:"Description is not provided" }}</small>
                 </div>
-                <div class="text-black-50 ml-3">
-                  <div class="row">
-                    <small class="mr-2"><strong>Season:</strong>{{ obj.season }}</small>
-                    <small class="mr-2"><strong>Continuity:</strong>{{ obj.carry_over|yesno:"Yes,No" }}</small>
-                    <small class="mr-2"><strong>Description:</strong>{{ obj.description|default:"Description is not provided" }}</small>
-                  </div>
-                  <div class="row">
-                    <small class="mr-2"><strong>Purchased quantity:</strong>{{ obj.purchased }}</small>
-                    <small class="mr-2"><strong>Stores stock:</strong>{{ obj.stores_stock }}</small>
-                    <small class="mr-2"><strong>Country stock:</strong>{{ obj.country_stock }}</small>
-                    <small class="mr-2"><strong>Pending delivery:</strong>{{ obj.pending_delivery }}</small>
-                  </div>
-                  <div class="row">
-                    <small class="mr-2"><strong>Rotation:</strong>
-                      {% if obj.rotation > 6 %}
-                        <span class="badge badge-danger">{{ obj.rotation }} weeks</span></small>
-                    {% else %}
-                      <span class="badge badge-success">{{ obj.rotation }} weeks</span>
-                    {% endif %}
+                <div class="row">
+                  <small class="mr-2"><strong>Purchased quantity:</strong>{{ obj.purchased }}</small>
+                  <small class="mr-2"><strong>Stores stock:</strong>{{ obj.stores_stock }}</small>
+                  <small class="mr-2"><strong>Country stock:</strong>{{ obj.country_stock }}</small>
+                  <small class="mr-2"><strong>Pending delivery:</strong>{{ obj.pending_delivery }}</small>
+                </div>
+                <div class="row">
+                  <small class="mr-2"><strong>Rotation:</strong>
+                    {% if obj.rotation > 6 %}
+                    <span class="badge badge-danger">{{ obj.rotation }} weeks</span></small>
+                  {% else %}
+                  <span class="badge badge-success">{{ obj.rotation }} weeks</span>
+                  {% endif %}
                   </small>
                   <small class="mr-2"><strong>Sellthrough:</strong>
                     {% if obj.sellthrough > 10 %}
-                      <span class="badge badge-success">{{ obj.sellthrough }}%</span></small>
+                    <span class="badge badge-success">{{ obj.sellthrough }}%</span></small>
                   {% else %}
-                    <span class="badge badge-danger">{{ obj.sellthrough }}%</span>
+                  <span class="badge badge-danger">{{ obj.sellthrough }}%</span>
                   {% endif %}
-                </small>
+                  </small>
+                </div>
               </div>
-            </div>
-            <div class="table-responsive mt-0">
-              <table class="table table-striped">
-                <thead>
+              <div class="table-responsive mt-0">
+                <table class="table table-striped">
+                  <thead>
                   <tr>
                     <th>First day</th>
                     {% for day in obj.start_days %}<td>{{ day }}</td>{% endfor %}
                   </tr>
-                </thead>
-                <tbody>
+                  </thead>
+                  <tbody>
                   <tr>
                     <td>Week number</td>
                     {% for week in obj.week_numbers %}<td>{{ week }}</td>{% endfor %}
@@ -132,17 +132,17 @@
                   <tr>
                     <td>Reference MCC Sales</td>
                     {% for mirror_mcc in obj.mirror_mcc_sales %}
-                      <td>{{ mirror_mcc|default:0 }}</td>
+                    <td>{{ mirror_mcc|default:0 }}</td>
                     {% endfor %}
                   </tr>
                   <tr>
                     <td>Actual Sales</td>
                     {% for sales in obj.sales_result %}
-                      {% if sales != "" %}
-                        <td>{{ sales }}</td>
-                      {% else %}
-                        <td>--</td>
-                      {% endif %}
+                    {% if sales != "" %}
+                    <td>{{ sales }}</td>
+                    {% else %}
+                    <td>--</td>
+                    {% endif %}
                     {% endfor %}
                   </tr>
                   <tr>
@@ -151,38 +151,39 @@
                   </tr>
                   <tr>
                     <td>Planned Sales fix</td>
-                    {% for plan in obj.sales_plans %}
-                      <td>{{ plan|default:"0" }}</td>
+                    {% for planned in obj.sales_plans %}
+                    <td>{{ planned.plan|default:"0" }}</td>
                     {% endfor %}
                   </tr>
                   <tr>
                     <td>Planned Sales</td>
-                    {% for plan in obj.sales_plans %}
+                    {% for planned in obj.sales_plans %}
                     <td>
-<!--                      <form action="reports/planned-sales/">-->
-                      <form action="{% url 'domain:sales_plans'%}" method="post">
+                      <form action="" method="post">
                         {% csrf_token %}
-                       <input type="text" class="form-control-sm col-6" aria-label="Order units" value="{{ plan }}" />
-                        <input type="submit" value="In">
+                        <input type="hidden" name="date" class="form-control-sm col-6" aria-label="Day" value="{{planned.day}}" />
+                        <input type="hidden" name="mcc" class="form-control-sm col-6" aria-label="Mcc code" value="{{obj.mcc}}" />
+                        <input type="text" name="planned" class="form-control-sm col-6" aria-label="Order units" value="{{ planned.plan }}" />
+                        <input type="submit" value="Set">
                       </form>
                     </td>
                     {% endfor %}
                   </tr>
-                </tbody>
-              </table>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      {% endfor %}
+      <!-- #/ container -->
     </div>
-  {% endfor %}
-  <!-- #/ container -->
-</div>
-<!--**********************************
-            Content body end
-        ***********************************-->
-</div>
-{% endblock mainbody %}
+    <!--**********************************
+                Content body end
+            ***********************************-->
+  </div>
+  {% endblock mainbody %}
 </div>
 <!--**********************************
         Main wrapper end
@@ -191,8 +192,8 @@
         Scripts
     ***********************************-->
 {% block extrascripts %}
-  <script src="{% static './plugins/tables/js/jquery.dataTables.min.js' %}"></script>
-  <script src="{% static './plugins/tables/js/datatable/dataTables.bootstrap4.min.js' %}"></script>
-  <script src="{% static './plugins/tables/js/datatable-init/datatable-basic.min.js' %}"></script>
+<script src="{% static './plugins/tables/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static './plugins/tables/js/datatable/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static './plugins/tables/js/datatable-init/datatable-basic.min.js' %}"></script>
 {% endblock extrascripts %}
 </body>

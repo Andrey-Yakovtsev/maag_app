@@ -16,4 +16,5 @@ class Sales(ReportEntity):
         return self.amount / self.quantity
 
     def __str__(self):
-        return f"{self.date} - {self.mcc.mcc} - {self.quantity}"
+        return f"{self.date} - {self.week} - {self.mcc.mcc} - {self.quantity} - {self.planned}"
+        # FIXME - QS упорядочивать по ДАТЕ, чтобы flat выдавал что надо.

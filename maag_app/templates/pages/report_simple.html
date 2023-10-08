@@ -3,48 +3,86 @@
 {% load static %}
 
 <body>
+<!--**********************************
+      Main wrapper start
+  ***********************************-->
+<div id="main-wrapper">
+  {% block mainbody %}
   <!--**********************************
-        Main wrapper start
+        Content body start
     ***********************************-->
-  <div id="main-wrapper">
-    {% block mainbody %}
-      <!--**********************************
-            Content body start
-        ***********************************-->
-      <div class="content-body">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Bullshit Report</h4>
-                  <h2>context</h2>
-                  <hr />
-                  <div>Metod ==>> {{ request_m }}</div>
-                  <div>form ==>> {{ form }}</div>
-                  <hr />
-                  <div>Context => {{ request_c }}</div>
-                </div>
+  <div class="content-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Bullshit Report</h4>
+              <h2>context</h2>
+              <hr />
+<!--              <div>Metod ==>> {{ request_m }}</div>-->
+<!--              <div>form ==>> {{ form }}</div>-->
+              <hr />
+              <div>Context => {{ request_c }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Bullshit Report</h4>
+              <h2>html Form</h2>
+              <hr />
+              <div>
+                <form action="{% url 'domain:sales_plans'%}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="week_no" class="form-control-sm col-6" aria-label="Week number" value="43" />
+                  <input type="hidden" name="mcc" class="form-control-sm col-6" aria-label="Mcc code" value="1111/111/111" />
+                  <input type="text" name="plan" class="form-control-sm col-6" aria-label="Order units" value="{{ plan }}" />
+                  <input type="submit" value="In">
+                </form>
               </div>
             </div>
           </div>
-          <!-- #/ container -->
         </div>
-        <!--**********************************
-            Content body end
-        ***********************************-->
       </div>
-    {% endblock mainbody %}
-  </div>
-  <!--**********************************
-        Main wrapper end
-***********************************-->
-  <!--**********************************
-        Scripts
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Bullshit Report</h4>
+              <h2>Django form</h2>
+              <hr />
+              <div>
+                <form action="{% url 'domain:sales_plans'%}" method="post">
+                  {% csrf_token %}
+                  {{ form.as_div }}
+                  <input type="submit" value="In">
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- #/ container -->
+    </div>
+    <!--**********************************
+        Content body end
     ***********************************-->
-  {% block extrascripts %}
-    <script src="{% static './plugins/tables/js/jquery.dataTables.min.js' %}"></script>
-    <script src="{% static './plugins/tables/js/datatable/dataTables.bootstrap4.min.js' %}"></script>
-    <script src="{% static './plugins/tables/js/datatable-init/datatable-basic.min.js' %}"></script>
-  {% endblock extrascripts %}
+  </div>
+  {% endblock mainbody %}
+</div>
+<!--**********************************
+      Main wrapper end
+***********************************-->
+<!--**********************************
+      Scripts
+  ***********************************-->
+{% block extrascripts %}
+<script src="{% static './plugins/tables/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static './plugins/tables/js/datatable/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static './plugins/tables/js/datatable-init/datatable-basic.min.js' %}"></script>
+{% endblock extrascripts %}
 </body>
