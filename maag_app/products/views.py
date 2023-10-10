@@ -1,9 +1,6 @@
 import logging
 
-from django.core.exceptions import ValidationError
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
-from django.template import loader
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django_filters.views import FilterView
 
 from maag_app.products.filters import MccFilter
@@ -20,22 +17,7 @@ from maag_app.sales.models import Sales
 logger = logging.getLogger()
 
 
-def mcc_report_view(request):
-    context = {}
-    mcc_filter = MccFilter(request.GET, queryset=Product.objects.select_related().all())
-    template = loader.get_template("domain/product_filter.html")
-    context["filter"] = mcc_filter
-    context["dates"] = {
-        "sales": get_latest_sales_report_date(),
-        "stock": get_latest_stock_report_date(),
-        "orders": get_latest_orders_report_date(),
-    }
-    # TODO Понять как к странице с фильтром на полученный
-    #  кверисет прикручивать контекст...
-    return HttpResponse(template.render(context, request))
-
-
-class MccReportView(FilterView):
+class MccReportView(LoginRequiredMixin, FilterView):
     model = Product
     filterset_class = MccFilter
 

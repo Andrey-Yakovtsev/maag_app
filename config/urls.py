@@ -16,6 +16,7 @@ urlpatterns = [
     path("users/", include("maag_app.users.urls", namespace="users")),
     path("reports/", include("maag_app.products.urls")),
     path("accounts/", include("allauth.urls")),
+    # path("accounts/", include("django.contrib.auth.urls")),
     # Your stuff: custom urls includes go here
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
