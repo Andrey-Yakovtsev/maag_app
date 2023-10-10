@@ -107,3 +107,11 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
     volumes:
       - maag_pgadmin_data:/var/lib/pgadmin
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"
+      - "4318:4318"
+    environment:
+      - LOG_LEVEL=debug

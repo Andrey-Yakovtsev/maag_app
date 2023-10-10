@@ -36,13 +36,25 @@ shelll:
 	sudo docker-compose -f local.yml run --rm django python manage.py shell_plus
 
 migrations:
+	docker stop maag_app_local_django
+	docker compose -f local.yml run --rm django python manage.py makemigrations
+
+migrate:
+	docker stop maag_app_local_django
+	docker compose -f local.yml run --rm django python manage.py migrate
+
+migrationsl:
 	sudo docker stop maag_app_local_django
 	sudo docker-compose -f local.yml run --rm django python manage.py makemigrations
 
-migrate:
+migratel:
 	sudo docker stop maag_app_local_django
 	sudo docker-compose -f local.yml run --rm django python manage.py migrate
 
-fill_db:
+fill_dbl:
 	sudo docker stop maag_app_local_django
 	sudo docker-compose -f local.yml run --rm django python manage.py init_db_fulfilment
+
+fill_db:
+	docker stop maag_app_local_django
+	docker compose -f local.yml run --rm django python manage.py init_db_fulfilment
