@@ -62,13 +62,15 @@ class MccReport:
         logger.debug(f"_set_weeks_numbers ==> {week_numbers}")
         return week_numbers
 
-    def _set_weeks_starting_dates(self) -> list[datetime.date]:
+    def _set_weeks_starting_dates(self) -> list[str]:
         """Расчитывает начало отчетной недели и от него собирает строку с датами."""
         first_day_of_week = self.date + datetime.timedelta(days=-self.date.weekday())
         start_date = first_day_of_week - datetime.timedelta(weeks=4)
-        days_list = [start_date]
+        days_list = [start_date.strftime("%d/%m/%Y")]
         for i in range(1, self.report_range_weeks_count):
-            days_list.append(start_date + datetime.timedelta(weeks=i))
+            days_list.append(
+                (start_date + datetime.timedelta(weeks=i)).strftime("%d/%m/%Y")
+            )
         logger.debug(f"{self.mcc=}, " f"_set_weeks_starting_dates ==> {days_list}")
         return days_list
 

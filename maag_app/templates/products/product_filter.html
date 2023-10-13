@@ -43,31 +43,48 @@
                 <div class="col-4 input-group  align-self-end">
                   <div class="mr-2 mt-3">Select store entry date</div>
                   <div class="input-group">
-                      <input type="text" class="form-control" id="datepicker-autoclose" placeholder="mm/dd/yyyy"> <span class="input-group-append"><span class="input-group-text"><i class="mdi mdi-calendar-check"></i></span></span>
+                    <form action="" method="GET">
+                      <input type="text" name="date" class="form-control" id="datepicker-autoclose"
+                              {% if dates.store_entry_date %}
+                               placeholder="{{ dates.store_entry_date|date:"d/m/Y" }}"
+                              {% else %}
+                              placeholder="dd/mm/yyyy"
+                              {% endif %}
+                            >
+                      <button type="submit" id="check-minutes" class="btn waves-effect waves-light btn-success">
+                        <span><i class="fa fa-check"></i></span>
+                      </button>
+                    </form>
                   </div>
                 </div>
               </div>
               <div class="text-black-50 ml-3">
                 <div class="row">
-                  <small class="mr-2"><strong>Season:</strong>{{ obj.season }}</small>
-                  <small class="mr-2"><strong>Continuity:</strong>{{ obj.carry_over|yesno:"Yes,No" }}</small>
-                  <small class="mr-2"><strong>Description:</strong>{{ obj.description|default:"Description is not provided" }}</small>
+                  <small class="mr-2"><strong>Season: </strong>{{ obj.season }}</small>
+                  <small class="mr-2"><strong>Continuity: </strong>
+                      {% if obj.carry_over %}
+                      <span class="badge badge-danger">{{ obj.carry_over|yesno:"Yes,No" }}</span>
+                      {% else %}
+                      <span class="badge badge-success">{{ obj.carry_over|yesno:"Yes,No" }}</span>
+                      {% endif %}
+                  </small>
+                  <small class="mr-2"><strong>Description: </strong>{{ obj.description|default:"Description is not provided" }}</small>
                 </div>
                 <div class="row">
-                  <small class="mr-2"><strong>Purchased quantity:</strong>{{ obj.purchased }}</small>
-                  <small class="mr-2"><strong>Stores stock:</strong>{{ obj.stores_stock }}</small>
-                  <small class="mr-2"><strong>Country stock:</strong>{{ obj.country_stock }}</small>
-                  <small class="mr-2"><strong>Pending delivery:</strong>{{ obj.pending_delivery }}</small>
+                  <small class="mr-2"><strong>Purchased quantity: </strong>{{ obj.purchased }}</small>
+                  <small class="mr-2"><strong>Stores stock: </strong>{{ obj.stores_stock }}</small>
+                  <small class="mr-2"><strong>Country stock: </strong>{{ obj.country_stock }}</small>
+                  <small class="mr-2"><strong>Pending delivery: </strong>{{ obj.pending_delivery }}</small>
                 </div>
                 <div class="row">
-                  <small class="mr-2"><strong>Rotation:</strong>
+                  <small class="mr-2"><strong>Rotation: </strong>
                     {% if obj.rotation > 6 %}
                     <span class="badge badge-danger">{{ obj.rotation }} weeks</span></small>
                   {% else %}
                   <span class="badge badge-success">{{ obj.rotation }} weeks</span>
                   {% endif %}
                   </small>
-                  <small class="mr-2"><strong>Sellthrough:</strong>
+                  <small class="mr-2"><strong>Sellthrough: </strong>
                     {% if obj.sellthrough > 10 %}
                     <span class="badge badge-success">{{ obj.sellthrough }}%</span></small>
                   {% else %}
@@ -90,25 +107,31 @@
               </div>
               <div class="text-black-50 ml-3">
                 <div class="row">
-                  <small class="mr-2"><strong>Season:</strong>{{ obj.season }}</small>
-                  <small class="mr-2"><strong>Continuity:</strong>{{ obj.carry_over|yesno:"Yes,No" }}</small>
-                  <small class="mr-2"><strong>Description:</strong>{{ obj.description|default:"Description is not provided" }}</small>
+                  <small class="mr-2"><strong>Season: </strong>{{ obj.season }}</small>
+                  <small class="mr-2"><strong>Continuity: </strong>
+                  {% if obj.carry_over %}
+                      <span class="badge badge-danger">{{ obj.carry_over|yesno:"Yes,No" }}</span>
+                      {% else %}
+                      <span class="badge badge-success">{{ obj.carry_over|yesno:"Yes,No" }}</span>
+                      {% endif %}
+                  </small>
+                  <small class="mr-2"><strong>Description: </strong>{{ obj.description|default:"Description is not provided" }}</small>
                 </div>
                 <div class="row">
-                  <small class="mr-2"><strong>Purchased quantity:</strong>{{ obj.purchased }}</small>
-                  <small class="mr-2"><strong>Stores stock:</strong>{{ obj.stores_stock }}</small>
-                  <small class="mr-2"><strong>Country stock:</strong>{{ obj.country_stock }}</small>
-                  <small class="mr-2"><strong>Pending delivery:</strong>{{ obj.pending_delivery }}</small>
+                  <small class="mr-2"><strong>Purchased quantity: </strong>{{ obj.purchased }}</small>
+                  <small class="mr-2"><strong>Stores stock: </strong>{{ obj.stores_stock }}</small>
+                  <small class="mr-2"><strong>Country stock: </strong>{{ obj.country_stock }}</small>
+                  <small class="mr-2"><strong>Pending delivery: </strong>{{ obj.pending_delivery }}</small>
                 </div>
                 <div class="row">
-                  <small class="mr-2"><strong>Rotation:</strong>
+                  <small class="mr-2"><strong>Rotation: </strong>
                     {% if obj.rotation > 6 %}
                     <span class="badge badge-danger">{{ obj.rotation }} weeks</span></small>
                   {% else %}
                   <span class="badge badge-success">{{ obj.rotation }} weeks</span>
                   {% endif %}
                   </small>
-                  <small class="mr-2"><strong>Sellthrough:</strong>
+                  <small class="mr-2"><strong>Sellthrough: </strong>
                     {% if obj.sellthrough > 10 %}
                     <span class="badge badge-success">{{ obj.sellthrough }}%</span></small>
                   {% else %}
@@ -166,6 +189,9 @@
                         <input type="hidden" name="mcc" class="form-control-sm col-6" aria-label="Mcc code" value="{{obj.mcc}}" />
                         <input type="text" name="planned" class="form-control-sm col-6" aria-label="Order units" value="{{ planned.plan }}" />
                         <input type="submit" value="Set">
+{#                        <button type="submit" id="check-minutes" class="btn waves-effect waves-light btn-success">#}
+{#                        <span><i class="fa fa-check"></i></span>#}
+{#                      </button>#}
                       </form>
                     </td>
                     {% endfor %}

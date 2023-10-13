@@ -1,3 +1,4 @@
+import datetime
 import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -44,9 +45,26 @@ class MccReportView(LoginRequiredMixin, FilterView):
         }
 
         context["planned_form"] = PlannedForm()
-
+        logger.info(
+            f"REQUEST_URI=++++++============>>> {request.META.get('REQUEST_URI')}"
+        )
+        logger.info(
+            f"HTTP_REFERER=++++++============>>> {request.META.get('HTTP_REFERER')}"
+        )
+        logger.info(f"SESSION_GET=++++++============>>> {request.session.__dict__}")
+        logger.info(f"SESSION_GET=++++++============>>> {request.GET.get('date')}")
+        store_entry_date = datetime.date.today()
+        try:
+            store_entry_date = datetime.datetime.strptime(
+                request.GET.get("date"), "%m/%d/%Y"
+            )
+        except (TypeError, ValueError) as err:
+            logger.debug(f"No date given to request: {err}")
+            pass
+        context["dates"]["store_entry_date"] = store_entry_date
+        # FIXME Доделать сохранение параметров фильтрации... Кажется это м.б. внутри filterset...
         for mcc in self.filterset.qs:
-            report = MccReport(mcc.mcc).generate()
+            report = MccReport(mcc.mcc, store_entry_date).generate()
             mcc.country_stock = report["country_stock"]
             mcc.stores_stock = report["stores_stock"]
             mcc.rotation = report["rotation"]
@@ -59,7 +77,7 @@ class MccReportView(LoginRequiredMixin, FilterView):
             mcc.start_days = report["days"]
             mcc.mirror_mcc_sales = report["mirror_mcc_sales"]
             mcc.stocks_data = report["stocks"]
-            logger.debug(f"MCC DATA ==> {mcc.__dict__}")
+            # logger.debug(f"MCC DATA ==> {mcc.__dict__}")
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
