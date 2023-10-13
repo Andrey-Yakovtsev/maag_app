@@ -37,16 +37,3 @@ django-debug-toolbar==4.2.0  # https://github.com/jazzband/django-debug-toolbar
 django-extensions==3.2.3  # https://github.com/django-extensions/django-extensions
 django-coverage-plugin==3.1.0  # https://github.com/nedbat/django_coverage_plugin
 pytest-django==4.5.2  # https://github.com/pytest-dev/pytest-django
-
-# OpenTelemetry
-opentelemetry-api
-opentelemetry-distro
-opentelemetry-instrumentation
-opentelemetry-instrumentation-dbapi
-opentelemetry-instrumentation-django
-opentelemetry-instrumentation-logging
-opentelemetry-sdk
-opentelemetry-semantic-conventions
-opentelemetry-util-http
-
-#opentelemetry-instrumentation-requests

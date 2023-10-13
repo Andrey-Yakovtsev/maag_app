@@ -73,6 +73,6 @@ class MccReportView(LoginRequiredMixin, FilterView):
                 week=week,
                 defaults={"planned": form.cleaned_data["planned"]},
             )
-            logger.debug(f"Sales plan entry updated or created: {obj}")
+            logger.debug(f"Sales plan entry {'updated' if _ else 'created'}: {obj}")
             return self.get(request, *args, **kwargs)
         return self.get(request, *args, **kwargs)
