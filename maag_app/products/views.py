@@ -3,6 +3,7 @@ import logging
 from copy import deepcopy
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
 from django_filters.views import FilterView
 
 from maag_app.products.filters import MccFilter
@@ -19,7 +20,11 @@ from maag_app.sales.models import Sales
 logger = logging.getLogger()
 
 
-class MccReportView(LoginRequiredMixin, FilterView):
+def index_view(request):
+    return redirect("domain:mcc_report")
+
+
+class MccReportView(FilterView):
     model = Product
     filterset_class = MccFilter
 
