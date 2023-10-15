@@ -43,8 +43,9 @@
                 <div class="col-4 input-group  align-self-end">
                   <div class="mr-2 mt-3">Select store entry date</div>
                   <div class="input-group">
-                    <form action="" method="GET">
-                      <input type="text" name="date" class="form-control" id="datepicker-autoclose"
+                    <form action="" method="POST">
+                      {% csrf_token %}
+                      <input type="text" name="store_entry_date" class="form-control" id="datepicker-autoclose"
                               {% if dates.store_entry_date %}
                                placeholder="{{ dates.store_entry_date|date:"d/m/Y" }}"
                               {% else %}

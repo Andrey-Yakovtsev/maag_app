@@ -1,5 +1,6 @@
 import datetime
 import logging
+from copy import deepcopy
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django_filters.views import FilterView
@@ -45,24 +46,14 @@ class MccReportView(LoginRequiredMixin, FilterView):
         }
 
         context["planned_form"] = PlannedForm()
-        logger.info(
-            f"REQUEST_URI=++++++============>>> {request.META.get('REQUEST_URI')}"
-        )
-        logger.info(
-            f"HTTP_REFERER=++++++============>>> {request.META.get('HTTP_REFERER')}"
-        )
-        logger.info(f"SESSION_GET=++++++============>>> {request.session.__dict__}")
-        logger.info(f"SESSION_GET=++++++============>>> {request.GET.get('date')}")
-        store_entry_date = datetime.date.today()
-        try:
-            store_entry_date = datetime.datetime.strptime(
-                request.GET.get("date"), "%m/%d/%Y"
-            )
-        except (TypeError, ValueError) as err:
-            logger.debug(f"No date given to request: {err}")
-            pass
+        entry_date = kwargs.get("store_entry_date")
+        if entry_date and isinstance(entry_date, datetime.date):
+            store_entry_date = entry_date
+        elif entry_date and isinstance(entry_date, str):
+            store_entry_date = datetime.datetime.strptime(entry_date, "%m/%d/%Y")
+        else:
+            store_entry_date = datetime.date.today()
         context["dates"]["store_entry_date"] = store_entry_date
-        # FIXME Доделать сохранение параметров фильтрации... Кажется это м.б. внутри filterset...
         for mcc in self.filterset.qs:
             report = MccReport(mcc.mcc, store_entry_date).generate()
             mcc.country_stock = report["country_stock"]
@@ -81,7 +72,17 @@ class MccReportView(LoginRequiredMixin, FilterView):
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
+        if store_entry_date := request.POST.get("store_entry_date"):
+            return self.get(request, *args, store_entry_date=store_entry_date, **kwargs)
+
         form = PlannedForm(request.POST)
+        entry_date = request.POST.get("date")
+        store_entry_date = (
+            datetime.datetime.strptime(entry_date, "%d/%m/%Y")
+            if entry_date
+            else datetime.date.today()
+        )
+        logger.info(f"{entry_date=}")
         if form.is_valid():
             week = form.cleaned_data["date"].isocalendar()[1]
             year = form.cleaned_data["date"].year
@@ -92,5 +93,5 @@ class MccReportView(LoginRequiredMixin, FilterView):
                 defaults={"planned": form.cleaned_data["planned"]},
             )
             logger.debug(f"Sales plan entry {'updated' if _ else 'created'}: {obj}")
-            return self.get(request, *args, **kwargs)
-        return self.get(request, *args, **kwargs)
+            return self.get(request, *args, store_entry_date=store_entry_date)
+        return self.get(request, *args, store_entry_date=entry_date)

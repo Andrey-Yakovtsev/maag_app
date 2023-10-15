@@ -26,10 +26,3 @@ class PlannedForm(forms.ModelForm):
             mcc = None
         cleaned_data["mcc"] = mcc
         return cleaned_data
-
-
-# class PlannedForm(forms.Form):
-#     planned = forms.IntegerField(min_value=1, max_value=1000)
-#     mcc = forms.CharField(max_length=12)
-#     # date = forms.CharField(max_length=10)
-#     date = forms.DateField(input_formats=["%d/%m/%Y"])
