@@ -78,6 +78,7 @@ class MccReportView(FilterView):
 
     def post(self, request, *args, **kwargs):
         if store_entry_date := request.POST.get("store_entry_date"):
+            logger.info(f"INSIDE POST Running get for new date {store_entry_date=}")
             return self.get(request, *args, store_entry_date=store_entry_date, **kwargs)
 
         form = PlannedForm(request.POST)
@@ -87,7 +88,7 @@ class MccReportView(FilterView):
             if entry_date
             else datetime.date.today()
         )
-        logger.info(f"{entry_date=}")
+        logger.info(f"{entry_date=}, {store_entry_date=}")
         if form.is_valid():
             week = form.cleaned_data["date"].isocalendar()[1]
             year = form.cleaned_data["date"].year
@@ -97,6 +98,9 @@ class MccReportView(FilterView):
                 week=week,
                 defaults={"planned": form.cleaned_data["planned"]},
             )
-            logger.debug(f"Sales plan entry {'updated' if _ else 'created'}: {obj}")
+            logger.info(
+                f"INSIDE POST. Form IS valid. Sales plan entry {'updated' if _ else 'created'}: {obj}"
+            )
             return self.get(request, *args, store_entry_date=store_entry_date)
+        logger.info("INSIDE POST. Form NOT VALID")
         return self.get(request, *args, store_entry_date=entry_date)

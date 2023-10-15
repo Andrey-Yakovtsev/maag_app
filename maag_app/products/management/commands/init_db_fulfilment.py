@@ -75,10 +75,10 @@ class Command(BaseCommand):
                 counter = 1
 
         for mcc in mccs:
-            datetime_str = "03/01/2023"
-            years_period = 1
-            # datetime_str = "03/01/2022" # На случай, если за 2 года надо создать
-            # years_period = 2
+            # datetime_str = "03/01/2023"
+            # years_period = 1
+            datetime_str = "03/01/2022"  # На случай, если за 2 года надо создать
+            years_period = 2
 
             start_date = datetime.strptime(datetime_str, "%d/%m/%Y")
             report_date = start_date

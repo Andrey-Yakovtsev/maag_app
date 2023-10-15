@@ -39,12 +39,12 @@ MAAG App
 После того, как затащил проект (на примере Линукс-версии):
 1. `make buildupl`
 2. `make superuserl` - обрати внимание - логин по и-мейлу
-3. `make fill_db` - скрипт заполнения БД моками
+3. `make fill_dbl` - скрипт заполнения БД моками
 
 Если по какой-то причине миграции не поднялись. Но должы сами при сборке.
-1. `make migrations`
-1. `make migrate` и снова
-3. `make fill_db`
+1. `make migrationsl`
+1. `make migratel` и снова
+3. `make fill_dbl`
 
 
 ### PG-Admin
