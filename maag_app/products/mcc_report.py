@@ -27,7 +27,10 @@ class MccReport:
     def __init__(self, mcc: str, date: datetime.date = datetime.date.today()):
         self.mcc: str = self._get_mcc(mcc)
         self.date: datetime.date = date
-        self.report_range: list[int] = self._set_report_period_in_weeks()
+        self.year: datetime.date.year = date.year
+        self.report_range: list[datetime.date] | None = None
+        # Кол-во недель, которое мы хотим выводить в форме отчета
+        # Позже можно вывести в админку
         self.report_range_weeks_count: int = 13
 
     @staticmethod
@@ -50,15 +53,11 @@ class MccReport:
         """Получает начало и конец отчетного периода в неделях для фильтра кверисета"""
         return list(self._set_weeks_numbers())
 
-    def _set_weeks_numbers(self) -> set[int]:
+    def _set_weeks_numbers(self) -> list[int]:
         """Расчитывает начало и конец отчетного периода в неделях."""
-        week_numbers = set()
-        delta = datetime.timedelta(days=1)
-        start_date, end_date = self._set_report_period_in_days()
-        while start_date <= end_date:
-            week_numbers.add(start_date.isocalendar()[1])
-            start_date += delta
-            [start_date, end_date]
+        week_numbers = []
+        for date in self.report_range:
+            week_numbers.append(date.isocalendar()[1])
         logger.debug(f"_set_weeks_numbers ==> {week_numbers}")
         return week_numbers
 
@@ -67,10 +66,12 @@ class MccReport:
         first_day_of_week = self.date + datetime.timedelta(days=-self.date.weekday())
         start_date = first_day_of_week - datetime.timedelta(weeks=4)
         days_list = [start_date.strftime("%d/%m/%Y")]
+        date_objs_list = [start_date]
         for i in range(1, self.report_range_weeks_count):
-            days_list.append(
-                (start_date + datetime.timedelta(weeks=i)).strftime("%d/%m/%Y")
-            )
+            next_week_start = start_date + datetime.timedelta(weeks=i)
+            days_list.append(next_week_start.strftime("%d/%m/%Y"))
+            date_objs_list.append(next_week_start)
+        self.report_range = date_objs_list
         logger.debug(f"{self.mcc=}, " f"_set_weeks_starting_dates ==> {days_list}")
         return days_list
 
@@ -87,29 +88,19 @@ class MccReport:
         value: какое поле из таблицы выбирать
         """
         mcc = self.mcc if not use_mirror else self.mcc.mirror_mcc
-        result_qs = (
-            model.objects.filter(mcc=mcc, week__in=self.report_range)
-            .select_related("mcc")
-            .order_by("year", "week")
-        )
-        if result_qs.count() >= len(self.report_range):
-            logger.debug(f"{model} QS is full. Returning a flat list")
-            return result_qs.values_list(value, flat=True)
+        period_report = []
+        for date in self.report_range:
+            week = date.isocalendar()[1]
+            year = date.year
 
-        else:
-            logger.info(f"{model} QS is not full. Iterating ove a QS by weeks")
-            weekly_report = array("L", [])
-            for week in self.report_range:
-                if (
-                    data := model.objects.filter(mcc=self.mcc, week=week)
-                    .select_related()
-                    .order_by("year", "week")
-                    .first()
-                ):
-                    weekly_report.append(getattr(data, attr_name))
-                else:
-                    weekly_report.append(0)
-            return weekly_report
+            weekly_data = sum(
+                model.objects.filter(mcc=mcc, week=week, year=year)
+                .select_related()
+                .values_list(value, flat=True)
+            )
+            period_report.append(weekly_data)
+
+        return period_report
 
     def _get_actual_sales(self) -> list[int] | array:
         # FIXME как по годам будет перенос недель???
@@ -239,7 +230,3 @@ class MccReport:
             "mirror_mcc_sales": self._get_mirror_mcc_sales(),
             "stocks": self._get_weekly_stocks(),
         }
-
-
-# report = MccReport("000/0012/1231")
-# print(report.generate())
