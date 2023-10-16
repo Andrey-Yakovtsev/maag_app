@@ -25,7 +25,7 @@ class MccReport:
     """
 
     def __init__(self, mcc: str, date: datetime.date = datetime.date.today()):
-        self.mcc: str = self._get_mcc(mcc)
+        self.mcc: Product = self._get_mcc(mcc)
         self.date: datetime.date = date
         self.year: datetime.date.year = date.year
         self.report_range: list[datetime.date] | None = None
