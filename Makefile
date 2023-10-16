@@ -1,3 +1,27 @@
+
+# PRODUCTION PART
+buildup_prod:
+	docker compose -f production.yml up --build
+
+up_prod:
+	docker compose -f production.yml up -d
+
+superuser_prod:
+	docker compose -f production.yml run --rm django python manage.py createsuperuser
+
+down_prod:
+	docker compose -f production.yml down
+
+kill_prod:
+	docker compose -f production.yml down -v
+
+migrations_prod:
+	docker compose -f production.yml run --rm django python manage.py makemigrations
+
+migrate_prod:
+	docker compose -f production.yml run --rm django python manage.py migrate
+
+# LOCAL PART
 buildup:
 	docker compose -f local.yml up --build
 
