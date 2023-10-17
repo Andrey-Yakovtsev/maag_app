@@ -21,6 +21,13 @@ migrations_prod:
 migrate_prod:
 	docker compose -f production.yml run --rm django python manage.py migrate
 
+fill_db_prod:
+	docker compose -f production.yml run --rm django python manage.py init_db_fulfilment
+
+clean_db_prod:
+	docker compose -f production.yml run --rm django python manage.py clean_db
+
+
 # LOCAL PART
 buildup:
 	docker compose -f local.yml up --build
