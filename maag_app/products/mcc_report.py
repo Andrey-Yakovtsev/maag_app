@@ -193,7 +193,9 @@ class MccReport:
             .select_related("mcc")
             .aggregate(Sum("quantity"))
         )["quantity__sum"]
-        return round(ordered / total_sales, 2)
+        if ordered and total_sales:
+            return round(ordered / total_sales, 2)
+        return 0
 
     def _get_pending_delivery(self) -> float:
         pending = (
