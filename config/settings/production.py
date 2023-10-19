@@ -17,7 +17,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 # ALLOWED_HOSTS = env.list(
 #     "DJANGO_ALLOWED_HOSTS", default=["maag-om.space", "82.146.38.136"]
 # )
-ALLOWED_HOSTS = ["maag-om.space", "82.146.38.136"]
+ALLOWED_HOSTS = ["www.maag-om.space", "maag-om.space", "82.146.38.136"]
 
 
 # DATABASES
