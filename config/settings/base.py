@@ -5,6 +5,8 @@ from pathlib import Path
 
 import environ
 
+from config.settings.logger import CustomisedJSONFormatter
+
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # maag_app/
 APPS_DIR = BASE_DIR / "maag_app"
@@ -243,19 +245,40 @@ DJANGO_ADMIN_FORCE_ALLAUTH = env.bool("DJANGO_ADMIN_FORCE_ALLAUTH", default=Fals
 # https://docs.djangoproject.com/en/dev/ref/settings/#logging
 # See https://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
+LOG_DIR = BASE_DIR / "log"
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+LOG_LEVEL = "DEBUG" if DEBUG else "INFO"
+SERVICE_NAME = "maag-om"
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
-        "verbose": {
-            "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s",
+        "standard": {
+            "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s"
         },
+        "json_formatter": {(): CustomisedJSONFormatter},
     },
     "handlers": {
+        "file": {
+            "level": LOG_LEVEL,
+            "class": "logging.handlers.RotatingFileHandler",
+            "formatter": "json_formatter",
+            "filename": LOG_DIR / "maag-om.log",
+            "maxBytes": 1024 * 1024 * 5,  # 5Mb
+            "backupCount": 5,
+        },
         "console": {
-            "level": "DEBUG",
+            "level": LOG_LEVEL,
+            "formatter": "standard",
             "class": "logging.StreamHandler",
-            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        "": {  # root logger
+            "handlers": ["console", "file"],
+            "level": LOG_LEVEL,
+            "propagate": True,
         }
     },
     "root": {"level": "INFO", "handlers": ["console"]},
