@@ -40,7 +40,7 @@ LOGGING_CONFIG = {
             "level": LOG_LEVEL,
             "class": "logging.handlers.RotatingFileHandler",
             "formatter": "json_formatter",
-            "filename": LOG_DIR / "maag-om.log",
+            "filename": LOG_DIR / "maaglog.json",
             "maxBytes": 1024 * 1024 * 5,  # 5Mb
             "backupCount": 5,
         },
