@@ -7,6 +7,7 @@ def get_latest_sales_report_date():
     try:
         return Sales.objects.order_by("-date").first().date
     except:
+        # на случай, если БД еще пустая...
         pass
 
 
