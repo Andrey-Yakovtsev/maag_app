@@ -1,8 +1,6 @@
 import datetime
 import logging
-from copy import deepcopy
 
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django_filters.views import FilterView
 
@@ -17,7 +15,7 @@ from maag_app.products.utils import (
 )
 from maag_app.sales.models import Sales
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 
 def index_view(request):

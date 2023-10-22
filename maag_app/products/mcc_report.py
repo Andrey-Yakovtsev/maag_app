@@ -3,8 +3,6 @@
 """
 import datetime
 import logging
-
-# from ..logging import maag_logger as logging
 from array import array
 
 from django.db.models import Model, Sum
