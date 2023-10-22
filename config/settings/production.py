@@ -8,7 +8,6 @@ from sentry_sdk.integrations.redis import RedisIntegration
 
 from .base import *  # noqa
 from .base import env
-from .logger import CustomisedJSONFormatter
 
 # GENERAL
 # ------------------------------------------------------------------------------
@@ -125,25 +124,18 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": True,
     "formatters": {
-        "standard": {"format": "%(asctime)s [%(levelname)s] %(name)s: %(message)s"},
-        "json_formatter": {(): CustomisedJSONFormatter},
+        "verbose": {
+            "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s",
+        },
     },
     "handlers": {
-        "file": {
-            "level": LOG_LEVEL,
-            "class": "logging.handlers.RotatingFileHandler",
-            "formatter": "json_formatter",
-            "filename": LOG_DIR / "maag-om.log",
-            "maxBytes": 1024 * 1024 * 5,  # 5Mb
-            "backupCount": 5,
-        },
         "console": {
-            "level": LOG_LEVEL,
-            "formatter": "json_formatter",
+            "level": "DEBUG",
             "class": "logging.StreamHandler",
-        },
+            "formatter": "verbose",
+        }
     },
-    "root": {"level": "INFO", "handlers": ["console", "file"]},
+    "root": {"level": "INFO", "handlers": ["console"]},
     "loggers": {
         "django.db.backends": {
             "level": "ERROR",
