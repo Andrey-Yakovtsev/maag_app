@@ -4,12 +4,12 @@
 import datetime
 import logging
 from array import array
+from typing import Optional
 
 from django.db.models import Model, Sum
-from django.forms import forms
 
 from maag_app.orders.models import OrderItem
-from maag_app.products.forms import PlannedForm
+from maag_app.utils.typing import Array
 
 logger = logging.getLogger(__name__)
 
@@ -25,16 +25,16 @@ class MccReport:
     """
 
     def __init__(self, mcc: str, date: datetime.date = datetime.date.today()):
-        self.mcc: Product = self._get_mcc(mcc)
+        self.mcc: Product | None = self._get_mcc(mcc)
         self.date: datetime.date = date
-        self.year: datetime.date.year = date.year
+        self.year: int = date.year
         self.report_range: list[datetime.date] | None = None
         # Кол-во недель, которое мы хотим выводить в форме отчета
         # Позже можно вывести в админку
         self.report_range_weeks_count: int = 13
 
     @staticmethod
-    def _get_mcc(mcc) -> Product:
+    def _get_mcc(mcc) -> Product | None:
         try:
             mcc_from_db = Product.objects.filter(mcc=mcc).first()
             logger.debug(f"Product with given MCC: {mcc_from_db.mcc} found")
@@ -42,7 +42,7 @@ class MccReport:
         except Product.DoesNotExist as err:
             logger.error(f"No product with given MCC: {mcc}. Error: {err}")
 
-    def _set_report_period_in_days(self) -> list[datetime.date, datetime.date]:
+    def _set_report_period_in_days(self) -> list[datetime.date]:
         """Расчитывает начало и конец отчетного периода в днях."""
         start_date = self.date - datetime.timedelta(weeks=4)
         end_date = self.date + datetime.timedelta(weeks=8)
@@ -81,7 +81,7 @@ class MccReport:
         value: str,
         attr_name: str = "quantity",
         use_mirror: bool = False,
-    ) -> list[int] | array:
+    ) -> list[int]:
         """
         Универсальный метод для заполнения табличек из кверисета или перебора циклом.
         attrs: model - указание модели

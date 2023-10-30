@@ -4,8 +4,7 @@ Base settings to build other settings files upon.
 from pathlib import Path
 
 import environ
-
-from config.settings.logger import CustomisedJSONFormatter
+from pythonjsonlogger import jsonlogger
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # maag_app/
@@ -258,7 +257,7 @@ LOGGING = {
         "standard": {
             "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s"
         },
-        "json_formatter": {(): CustomisedJSONFormatter},
+        "json_formatter": {(): jsonlogger.JsonFormatter},
     },
     "handlers": {
         "file": {
@@ -279,7 +278,7 @@ LOGGING = {
         "": {  # root logger
             "handlers": ["console", "file"],
             "level": LOG_LEVEL,
-            "propagate": True,
+            "propagate": False,
         }
     },
     "root": {"level": "INFO", "handlers": ["console", "file"]},

@@ -94,6 +94,7 @@ heavy_dbl:
 fill_db:
 	docker stop maag_app_local_django
 	docker compose -f local.yml run --rm django python manage.py init_db_fulfilment
+	docker run maag_app_local_django
 
 clean_db:
 	docker stop maag_app_local_django
